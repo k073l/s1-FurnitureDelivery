@@ -49,36 +49,7 @@ public static class DeliveryAppWithPosition
 
     private static void FixShopHierarchy(DeliveryApp app)
     {
-        var scrollViewGO = Utils.GetAllComponentsInChildrenRecursive<Transform>(app.gameObject)
-            .Select(t => t.gameObject)
-            .FirstOrDefault(go => go.name == "Scroll View");
-
-        if (scrollViewGO == null)
-        {
-            MelonLogger.Error("Could not find Scroll View in DeliveryApp");
-            return;
-        }
-
-        var contentGO = Utils.GetAllComponentsInChildrenRecursive<Transform>(scrollViewGO)
-            .Select(t => t.gameObject)
-            .FirstOrDefault(go => go.name == "Content");
-
-        if (contentGO == null)
-        {
-            MelonLogger.Error("Could not find Content in Scroll View");
-            return;
-        }
-
-        var content = contentGO.transform;
-
-        var shopComponents = new List<DeliveryShop>();
-        for (int i = 0; i < content.childCount; i++)
-        {
-            var child = content.GetChild(i);
-            var shop = child.GetComponent<DeliveryShop>();
-            if (shop != null)
-                shopComponents.Add(shop);
-        }
+        var shopComponents = Utils.GetInitializedShops(app, out var content);
 
         MelonLogger.Msg($"Found {shopComponents.Count} shop components in UI hierarchy");
 

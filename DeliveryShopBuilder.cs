@@ -29,7 +29,7 @@ namespace FurnitureDelivery
         private bool _availableByDefault = true;
         private int _insertPosition = -1;
 
-        private DeliveryVehicle _deliveryVehicle;
+        private DeliveryVehicle _deliveryVehicle = null;
         private readonly List<ShopListing> _listings = new List<ShopListing>();
 
         private readonly DeliveryShop _deliveryShopTemplate;
