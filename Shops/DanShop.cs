@@ -1,0 +1,75 @@
+﻿using FurnitureDelivery.Helpers;
+using MelonLoader;
+using UnityEngine;
+
+#if MONO
+using ScheduleOne.Vehicles;
+using ScheduleOne.UI.Phone.Delivery;
+#else
+using Il2CppScheduleOne.Vehicles;
+using Il2CppScheduleOne.UI.Phone.Delivery;
+#endif
+
+namespace FurnitureDelivery.Shops;
+
+public static class DanShop
+{
+    public static readonly List<string> ItemIDs = new List<string>
+    {
+        "cofeetable",
+        "metalsquaretable",
+        "woodsquaretable",
+        "toilet",
+        "trashcan",
+        "bed",
+        "TV",
+        "floorlamp",
+        "growtent",
+        "plasticpot",
+        "halogengrowlight",
+        "ledgrowlight",
+        "suspensionrack",
+        "soilpourer",
+        "potsprinkler",
+        "largestoragerack",
+        "mediumstoragerack",
+        "smallstoragerack",
+    };
+
+    public static void CreateDanShop(DeliveryApp app)
+    {
+        MelonLogger.Msg("Creating Dan's Furniture shop");
+#if !MONO
+        var deliveryVehicle = VehicleManager.Instance.AllVehicles._items[0];
+#else
+            var deliveryVehicle = VehicleManager.Instance.AllVehicles.FirstOrDefault();
+#endif
+        
+        var shop = new DeliveryShopBuilder(app)
+            .WithShopName("Dan's Furniture")
+            .WithShopDescription("General furniture")
+            .WithShopColor(new Color(0.06f, 0.56f, 0.87f))
+            .WithShopImage(Utils.FindSprite("Dan_Mugshot"))
+            .WithDeliveryFee(300f)
+            .SetAvailableByDefault(true)
+            .WithDeliveryVehicle(DeliveryShopBuilder.GetOrCreateDeliveryVehicle(deliveryVehicle))
+            .SetPosition(2);
+
+        var itemDefinitions = Utils.GetAllStorableItemDefinitions();
+
+        var wantedItems = ItemIDs
+            .Select(id => itemDefinitions.FirstOrDefault(item => item.ID == id))
+            .Where(item => item != null)
+            .ToList();
+
+        foreach (var item in wantedItems)
+        {
+            MelonLogger.Msg($"Adding item {item.name} to Dan's shop");
+            shop.AddListing(item);
+        }
+
+        var builtShop = shop.Build();
+
+        DeliveryAppWithPosition.Finalize(app, builtShop);
+    }
+}

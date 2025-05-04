@@ -1,0 +1,90 @@
+﻿using FurnitureDelivery.Helpers;
+using MelonLoader;
+using UnityEngine;
+
+#if MONO
+using ScheduleOne.Vehicles;
+using ScheduleOne.UI.Phone.Delivery;
+#else
+using Il2CppScheduleOne.Vehicles;
+using Il2CppScheduleOne.UI.Phone.Delivery;
+#endif
+
+namespace FurnitureDelivery.Shops;
+
+public static class OscarShop
+{
+    public static readonly List<string> ItemIDs = new List<string>
+    {
+        "moisturepreservingpot",
+        "airpot",
+        "fullspectrumgrowlight",
+        "suspensionrack",
+        "packagingstation",
+        "packagingstationmk2",
+        "mixingstation",
+        "mixingstationmk2",
+        "dryingrack",
+        "chemistrystation",
+        "laboven",
+        "cauldron",
+        "brickpress",
+        "bed"
+    };
+
+    public static void CreateOscarShop(DeliveryApp app)
+    {
+        MelonLogger.Msg("Creating Oscar's Equipment shop");
+
+#if !MONO
+        var deliveryVehicle = VehicleManager.Instance.AllVehicles._items
+            .FirstOrDefault(item => item != null && item.name.Contains("Oscar"));
+#else
+            var deliveryVehicle = VehicleManager.Instance.AllVehicles
+                .FirstOrDefault(item => item != null && item.name.Contains("Oscar"));
+#endif
+
+        if (deliveryVehicle == null)
+        {
+            MelonLogger.Warning("Oscar delivery vehicle not found, using default vehicle");
+#if !MONO
+            deliveryVehicle = VehicleManager.Instance.AllVehicles._items[0];
+#else
+                deliveryVehicle = VehicleManager.Instance.AllVehicles.FirstOrDefault();
+#endif
+        }
+        
+        var builder = new DeliveryShopBuilder(app)
+            .WithShopName("Oscar's Equipment")
+            .WithShopDescription("'Specialized' equipment")
+            .WithDeliveryFee(350f)
+            .WithShopColor(new Color(0.87f, 0.44f, 0.05f))
+            .WithShopImage(Utils.FindSprite("Oscar_Mugshot"))
+            .SetAvailableByDefault(true)
+            .WithDeliveryVehicle(DeliveryShopBuilder.GetOrCreateDeliveryVehicle(deliveryVehicle))
+            .SetPosition(6);
+
+        var itemDefinitions = Utils.GetAllStorableItemDefinitions();
+
+        var wantedItems = ItemIDs
+            .Select(id => itemDefinitions.FirstOrDefault(item => item.ID == id))
+            .Where(item => item != null)
+            .ToList();
+
+        foreach (var item in wantedItems)
+        {
+            MelonLogger.Msg($"Adding {item.ID} to Oscar's shop");
+            builder.AddListing(item);
+        }
+
+        var builtShop = builder.Build();
+        DeliveryAppWithPosition.Finalize(app, builtShop);
+
+        MelonLogger.Msg("Oscar's Equipment shop created successfully");
+
+        // Crucial - set oscar's shop go as disabled
+        // to prevent it from being shown in the UI
+
+        builtShop.gameObject.active = false;
+    }
+}
