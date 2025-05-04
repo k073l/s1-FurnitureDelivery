@@ -7,6 +7,7 @@
 		<AssemblyName>FurnitureDelivery-Mono</AssemblyName>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<DefineConstants>MONO</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -468,8 +469,12 @@
 
 	<ItemGroup>
 		<Compile Include="MainMod.cs" />
-		<Compile Include="DeliveryShopBuilder.cs" />
-		<Compile Include="DeliveryAppWithPosition.cs" />
+		<Compile Include="Patches.cs" />
+		<Compile Include="Helpers/DeliveryShopBuilder.cs" />
+		<Compile Include="Helpers/DeliveryAppWithPosition.cs" />
+		<Compile Include="Helpers/Utils.cs" />
+		<Compile Include="Shops/DanShop.cs" />
+		<Compile Include="Shops/OscarShop.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
