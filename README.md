@@ -14,6 +14,7 @@ Adds ordering furniture in deliveries.
 
 ### Delivery services added
 #### Dan's Furniture
+- Coffee Table
 - Metal Square Table
 - Wooden Square Table
 - Toilet
@@ -48,3 +49,19 @@ Will appear in the deliveries app alongside Oscar's supply store.
 - Cauldron
 - Brick Press
 - Bed
+
+#### Herbert's Curiosities
+Some of the items offered by the boutique, alongside exclusive, not-available-anywhere-else items.
+- Wooden Sign
+- Metal Sign
+- Wall Mounted Shelf
+- Antique Wall Lamp
+- Modern Wall Lamp
+- Wall Clock
+- Grandfather Clock
+- Safe
+- Jukebox
+- Golden Skateboard
+- Filing Cabinet
+- Small Trashcan
+- Dumpster

@@ -1,6 +1,5 @@
 using MelonLoader;
 
-
 [assembly:
     MelonInfo(typeof(FurnitureDelivery.FurnitureDelivery), FurnitureDelivery.BuildInfo.Name,
         FurnitureDelivery.BuildInfo.Version,
@@ -15,7 +14,7 @@ public static class BuildInfo
     public const string Name = "FurnitureDelivery";
     public const string Description = "Adds a custom delivery shops for furniture items";
     public const string Author = "k073l";
-    public const string Version = "1.1";
+    public const string Version = "1.2";
 }
 
 public class FurnitureDelivery : MelonMod
@@ -28,4 +27,3 @@ public class FurnitureDelivery : MelonMod
         MelonLogger.Msg("FurnitureDelivery initialized");
     }
 }
-

@@ -142,6 +142,7 @@ public class DeliveryAppAwakePatch
         var app = PlayerSingleton<DeliveryApp>.Instance;
 
         Shops.DanShop.CreateDanShop(app);
+        Shops.HerbertShop.CreateHerbertShop(app);
         Shops.OscarShop.CreateOscarShop(app);
     }
 }

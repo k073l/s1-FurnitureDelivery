@@ -16,6 +16,7 @@ public static class DanShop
 {
     public static readonly List<string> ItemIDs = new List<string>
     {
+        "coffeetable",
         "metalsquaretable",
         "woodsquaretable",
         "toilet",
