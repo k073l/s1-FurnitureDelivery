@@ -12,6 +12,8 @@ Adds ordering furniture in deliveries.
    - For alternate/alternate beta use Mono
 4. Launch the game
 
+**Note:** Might cause issues with other Delivery mods. Make sure you have a backup if you use those.
+
 ### Delivery services added
 #### Dan's Furniture
 - Coffee Table
