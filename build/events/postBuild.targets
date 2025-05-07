@@ -18,7 +18,7 @@
         <Message Condition="'@(ModList)' != ''" Text="Checking if mods in ModList exist..." Importance="high" />
         <Message Condition="'@(ModList)' == ''" Text="No mods defined in ModList; skipping mod copy." Importance="normal" />
         <Exec Condition="'@(ModList)' != ''" WorkingDirectory="$(ProjectDir)"
-              Command='powershell -Command "if (Test-Path &quot;%(ModList.Identity)&quot;) { Copy-Item &quot;%(ModList.Identity)&quot; &quot;$(S1ModsDir)&quot; } else { Write-Host &quot;Mod not found: %(ModList.Identity)&quot; }"' />
+              Command="powershell -Command &quot;&amp; { if (Test-Path '%(ModList.Identity)') { Copy-Item '%(ModList.Identity)' '$(S1ModsDir)' } else { Write-Host 'Mod not found: %(ModList.Identity)' } }&quot;" />
         
         <Message Condition="'$(IsMultiplayerTest)' == 'true'" Text="Multiplayer testing. Copying LocalMultiplayer mod and starter" Importance="high" />
         <Exec Condition="'$(IsMultiplayerTest)' == 'true'" Command='powershell -Command "Copy-Item \"$(MultiplayerMod)\" \"$(S1ModsDir)\""' />

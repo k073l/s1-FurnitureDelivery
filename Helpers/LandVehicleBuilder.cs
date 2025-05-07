@@ -28,50 +28,52 @@ public class LandVehicleBuilder
 #endif
 
     public LandVehicleBuilder()
-    { }
+    {
+    }
 
     public LandVehicleBuilder WithVehicleName(string vehicleName)
     {
         _vehicleName = vehicleName;
         return this;
     }
-    
+
     public LandVehicleBuilder WithVehicleCode(string vehicleCode)
     {
         _vehicleCode = vehicleCode;
         return this;
     }
-    
+
     public LandVehicleBuilder WithVehiclePrice(float vehiclePrice)
     {
         _vehiclePrice = vehiclePrice;
         return this;
     }
-    
+
     public LandVehicleBuilder WithTopSpeed(float topSpeed)
     {
         _topSpeed = topSpeed;
         return this;
     }
-    
+
     public LandVehicleBuilder WithPlayerOwned(bool isPlayerOwned)
     {
         _isPlayerOwned = isPlayerOwned;
         return this;
     }
-    
+
     public LandVehicleBuilder WithColor(EVehicleColor color)
     {
         _color = color;
         return this;
     }
-    
+
     public LandVehicle Build()
     {
         Vector3 position = new Vector3();
         Quaternion rotation = Quaternion.identity;
-        
-        var component = NetworkSingleton<VehicleManager>.Instance.SpawnAndReturnVehicle(_vehicleCode, position, rotation, false);
+
+        var component =
+            NetworkSingleton<VehicleManager>.Instance.SpawnAndReturnVehicle(_vehicleCode, position, rotation, false);
         component.SetGUID(GUIDManager.GenerateUniqueGUID());
         component.name = _vehicleName;
         component.gameObject.name = _vehicleName;
@@ -83,7 +85,7 @@ public class LandVehicleBuilder
         component.SetIsPlayerOwned(null, _isPlayerOwned);
         if (_isPlayerOwned)
             NetworkSingleton<VehicleManager>.Instance.PlayerOwnedVehicles.Add(component);
-        
+
         NetworkSingleton<VehicleManager>.Instance.AllVehicles.Add(component);
 
         return component;

@@ -5,10 +5,12 @@ using UnityEngine;
 #if MONO
 using ScheduleOne.Vehicles;
 using ScheduleOne.UI.Phone.Delivery;
+
 #else
 using Il2CppScheduleOne.Vehicles;
 using Il2CppScheduleOne.UI.Phone.Delivery;
 #endif
+
 namespace FurnitureDelivery.Shops;
 
 public static class OscarShop
@@ -30,7 +32,7 @@ public static class OscarShop
         "brickpress",
         "bed"
     };
-    
+
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-OscarShop");
 
     public static void CreateOscarShop(DeliveryApp app)
@@ -41,8 +43,8 @@ public static class OscarShop
         var deliveryVehicle = VehicleManager.Instance.AllVehicles._items
             .FirstOrDefault(item => item != null && item.name.Contains("Oscar"));
 #else
-            var deliveryVehicle = VehicleManager.Instance.AllVehicles
-                .FirstOrDefault(item => item != null && item.name.Contains("Oscar"));
+        var deliveryVehicle = VehicleManager.Instance.AllVehicles
+            .FirstOrDefault(item => item != null && item.name.Contains("Oscar"));
 #endif
 
         if (deliveryVehicle == null)
@@ -51,10 +53,10 @@ public static class OscarShop
 #if !MONO
             deliveryVehicle = VehicleManager.Instance.AllVehicles._items[0];
 #else
-                deliveryVehicle = VehicleManager.Instance.AllVehicles.FirstOrDefault();
+            deliveryVehicle = VehicleManager.Instance.AllVehicles.FirstOrDefault();
 #endif
         }
-        
+
         var builder = new DeliveryShopBuilder(app)
             .WithShopName("Oscar's Equipment")
             .WithShopDescription("'Specialized' equipment")

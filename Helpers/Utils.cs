@@ -5,6 +5,7 @@ using UnityEngine;
 using ScheduleOne;
 using ScheduleOne.ItemFramework;
 using ScheduleOne.UI.Phone.Delivery;
+
 #else
 using Il2CppInterop.Runtime;
 using Il2CppScheduleOne;
@@ -41,6 +42,7 @@ public static class Il2CppListExtensions
 public static class Utils
 {
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-Utils");
+
     public static Sprite FindSprite(string spriteName)
     {
         try
@@ -88,7 +90,7 @@ public static class Utils
 #if !MONO
         where T : Il2CppSystem.Object
 #else
-            where T : class
+        where T : class
 #endif
     {
 #if !MONO
@@ -104,11 +106,11 @@ public static class Utils
             }
         }
 #else
-                if (obj is T t)
-                {
-                    result = t;
-                    return true;
-                }
+        if (obj is T t)
+        {
+            result = t;
+            return true;
+        }
 #endif
 
         result = null!;
@@ -120,7 +122,7 @@ public static class Utils
 #if !MONO
         var itemRegistry = Il2CppListExtensions.ConvertToList(Registry.Instance.ItemRegistry);
 #else
-            var itemRegistry = Registry.Instance.ItemRegistry.ToList();
+        var itemRegistry = Registry.Instance.ItemRegistry.ToList();
 #endif
         var itemDefinitions = new List<StorableItemDefinition>();
 

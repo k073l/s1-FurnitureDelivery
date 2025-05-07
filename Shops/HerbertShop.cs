@@ -1,15 +1,15 @@
 ﻿using FurnitureDelivery.Helpers;
+using MelonLoader;
+using UnityEngine;
 
 #if MONO
 using ScheduleOne.UI.Phone.Delivery;
 using ScheduleOne.Vehicles.Modification;
+
 #else
 using Il2CppScheduleOne.UI.Phone.Delivery;
 using Il2CppScheduleOne.Vehicles.Modification;
 #endif
-using MelonLoader;
-
-using UnityEngine;
 
 namespace FurnitureDelivery.Shops;
 
@@ -33,7 +33,7 @@ public class HerbertShop
     };
 
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-HerbertShop");
-    
+
     public static void CreateHerbertShop(DeliveryApp app)
     {
         Logger.Debug("Creating Herbert's shop");
@@ -44,7 +44,7 @@ public class HerbertShop
             .WithPlayerOwned(false)
             .WithColor(EVehicleColor.DarkBlue)
             .Build();
-        
+
         var shop = new DeliveryShopBuilder(app)
             .WithShopName("Herbert's Curiosities")
             .WithShopDescription("Boutique's picks and exotic items")
@@ -54,7 +54,7 @@ public class HerbertShop
             .SetAvailableByDefault(true)
             .WithDeliveryVehicle(DeliveryShopBuilder.GetOrCreateDeliveryVehicle(landVehicle))
             .SetPosition(5);
-        
+
         var itemDefinitions = Utils.GetAllStorableItemDefinitions();
         var wantedItems = ItemIDs
             .Select(id => itemDefinitions.FirstOrDefault(item => item.ID == id))
@@ -66,9 +66,9 @@ public class HerbertShop
             Logger.Debug($"Adding item {item.name} to Herbert's shop");
             shop.AddListing(item);
         }
-        
+
         var builtShop = shop.Build();
-        
+
         DeliveryShopBuilder.Apply(app, builtShop);
         Logger.Msg("Herbert's Curiosities created");
     }
