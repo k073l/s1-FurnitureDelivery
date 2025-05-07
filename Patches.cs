@@ -8,6 +8,7 @@ using UnityEngine;
 using ScheduleOne.Delivery;
 using ScheduleOne.DevUtilities;
 using ScheduleOne.UI.Phone.Delivery;
+
 #else
 using Il2CppScheduleOne.Delivery;
 using Il2CppScheduleOne.DevUtilities;
@@ -16,11 +17,11 @@ using Il2CppScheduleOne.UI.Phone.Delivery;
 
 namespace FurnitureDelivery;
 
-
 [HarmonyPatch(typeof(DeliveryShop), "SetIsAvailable")]
 public class DeliveryShopSetIsAvailablePatch
 {
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-SetIsAvailable");
+
     public static void Postfix(DeliveryShop __instance)
     {
         var app = PlayerSingleton<DeliveryApp>.Instance;
@@ -47,6 +48,17 @@ public class DeliveryShopSetIsAvailablePatch
         }
 
         oscarEquipment.gameObject.SetActive(true);
+
+        // now stan
+        var stanShop = shops.FirstOrDefault(item =>
+            item.gameObject.name.StartsWith("DeliveryShop_Armory"));
+        if (stanShop == null)
+        {
+            Logger.Warning("Stan's shop not found");
+            return;
+        }
+
+        stanShop.gameObject.SetActive(true);
     }
 }
 
@@ -80,7 +92,6 @@ class InitializedShopsCache
     }
 }
 
-
 [HarmonyPatch(typeof(DeliveryShop), "CanOrder")]
 public class DeliveryShopCanOrderPatch
 {
@@ -94,7 +105,7 @@ public class DeliveryShopCanOrderPatch
             reason = string.Empty;
             return true;
         }
-        
+
         if (shopName.Contains("Dan"))
         {
             var danShops = InitializedShopsCache.GetShops("Dan");
@@ -110,7 +121,7 @@ public class DeliveryShopCanOrderPatch
                 }
             }
         }
-        
+
         if (shopName.Contains("Oscar"))
         {
             var oscarShops = InitializedShopsCache.GetShops("Oscar");
@@ -126,16 +137,17 @@ public class DeliveryShopCanOrderPatch
                 }
             }
         }
+
         reason = string.Empty;
         return true;
     }
 }
 
-
 [HarmonyPatch(typeof(DeliveryApp), "Awake")]
 public class DeliveryAppAwakePatch
 {
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-AppAwake");
+
     public static void Postfix(DeliveryApp __instance)
     {
         Logger.Debug("DeliveryApp Awake called");
@@ -145,5 +157,6 @@ public class DeliveryAppAwakePatch
         Shops.DanShop.CreateDanShop(app);
         Shops.HerbertShop.CreateHerbertShop(app);
         Shops.OscarShop.CreateOscarShop(app);
+        Shops.StanShop.CreateStanShop(app);
     }
 }

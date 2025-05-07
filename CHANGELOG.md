@@ -1,5 +1,7 @@
-﻿# Changelog
+# Changelog
 
+## 1.3.0
+- Added Armory delivery service
 ## 1.2.0
 - Added Herbert's Curiosities delivery service
 - Added compatibility notice - mod might not work well with other mods using Deliveries App. Back up your saves, if you use those.

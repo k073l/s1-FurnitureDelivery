@@ -67,3 +67,13 @@ Some of the items offered by the boutique, alongside exclusive, not-available-an
 - Filing Cabinet
 - Small Trashcan
 - Dumpster
+
+#### Armory
+Weapons and ammo, delivered from the warehouse.
+- Baseball Bat
+- Frying Pan
+- Machete
+- Revolver
+- Revolver Cylinder
+- M1911
+- M1911 Magazine
