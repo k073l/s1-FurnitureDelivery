@@ -2,12 +2,14 @@
 	<Import Project="build/paths.props" />
 	
 	<PropertyGroup>
-		<!-- Constant definition, comment if IL2CPP -->
-<!--		<DefineConstants>$(DefineConstants);MONO</DefineConstants>-->
+		<!-- Comment if IL2CPP -->
+		<DefineConstants>$(DefineConstants);MONO</DefineConstants>
+		<!-- Comment if testing -->
+		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
 		
 		<!-- Testing props -->
-		<DefineConstants>$(DefineConstants);TestMultiplayer</DefineConstants>
-<!--		<DefineConstants>$(DefineConstants);UnityExplorer</DefineConstants>-->
+<!--		<DefineConstants>$(DefineConstants);TestMultiplayer</DefineConstants>-->
+		<DefineConstants>$(DefineConstants);UnityExplorer</DefineConstants>
 
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>

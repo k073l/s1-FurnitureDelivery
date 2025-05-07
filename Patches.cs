@@ -1,6 +1,8 @@
-﻿using FurnitureDelivery.Helpers;
+﻿using System.Collections;
+using FurnitureDelivery.Helpers;
 using HarmonyLib;
 using MelonLoader;
+using UnityEngine;
 
 #if MONO
 using ScheduleOne.Delivery;
@@ -18,31 +20,29 @@ namespace FurnitureDelivery;
 [HarmonyPatch(typeof(DeliveryShop), "SetIsAvailable")]
 public class DeliveryShopSetIsAvailablePatch
 {
+    public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-SetIsAvailable");
     public static void Postfix(DeliveryShop __instance)
     {
         var app = PlayerSingleton<DeliveryApp>.Instance;
-        var shops = Utils.GetInitializedShops(app, out _);
+        var shops = DeliveryShopBuilder.GetInitializedShops(app, out _);
 
         var oscarShop = shops?.FirstOrDefault(item =>
             item.gameObject.name.StartsWith("Oscar"));
 
         if (oscarShop == null)
-        {
             return;
-        }
 
         if (__instance.gameObject.name != oscarShop.gameObject.name)
             return;
 
-        MelonLogger.Msg(
-            $"SetIsAvailable called on first Oscar's shop: {oscarShop.gameObject.name}, setting other one to active");
+        Logger.Msg($"First Oscar's shop: {oscarShop.gameObject.name} set to active, setting other one to active");
 
         var oscarEquipment = shops.FirstOrDefault(item =>
             item.gameObject.name.StartsWith("DeliveryShop_Oscar"));
 
         if (oscarEquipment == null)
         {
-            MelonLogger.Warning("Oscar's equipment shop not found");
+            Logger.Warning("Oscar's equipment shop not found");
             return;
         }
 
@@ -59,7 +59,7 @@ class InitializedShopsCache
         if (!shops.ContainsKey(name))
         {
             var app = PlayerSingleton<DeliveryApp>.Instance;
-            var list = Utils.GetInitializedShops(app, out _);
+            var list = DeliveryShopBuilder.GetInitializedShops(app, out _);
             foreach (var shop in list)
                 shops.TryAdd(shop.gameObject.name, shop);
         }
@@ -135,9 +135,10 @@ public class DeliveryShopCanOrderPatch
 [HarmonyPatch(typeof(DeliveryApp), "Awake")]
 public class DeliveryAppAwakePatch
 {
+    public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-AppAwake");
     public static void Postfix(DeliveryApp __instance)
     {
-        MelonLogger.Msg("DeliveryApp Awake called");
+        Logger.Debug("DeliveryApp Awake called");
 
         var app = PlayerSingleton<DeliveryApp>.Instance;
 

@@ -40,6 +40,7 @@ public static class Il2CppListExtensions
 
 public static class Utils
 {
+    public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-Utils");
     public static Sprite FindSprite(string spriteName)
     {
         try
@@ -48,7 +49,7 @@ public static class Utils
             {
                 if (sprite.name == spriteName)
                 {
-                    MelonLogger.Msg($"Found sprite '{spriteName}' directly in loaded objects");
+                    Logger.Debug($"Found sprite '{spriteName}' directly in loaded objects");
                     return sprite;
                 }
             }
@@ -57,7 +58,7 @@ public static class Utils
         }
         catch (Exception ex)
         {
-            MelonLogger.Error($"Error finding sprite '{spriteName}': {ex.Message}");
+            Logger.Error($"Error finding sprite '{spriteName}': {ex.Message}");
             return null;
         }
     }
@@ -131,51 +132,12 @@ public static class Utils
             }
             else
             {
-                MelonLogger.Msg(
+                Logger.Warning(
                     $"Definition {item.Definition?.GetType().FullName} is not a StorableItemDefinition");
             }
         }
 
         return itemDefinitions
             .ToList();
-    }
-
-    public static List<DeliveryShop> GetInitializedShops(DeliveryApp app, out Transform contentT)
-    {
-        var scrollViewGO = Utils.GetAllComponentsInChildrenRecursive<Transform>(app.gameObject)
-            .Select(t => t.gameObject)
-            .FirstOrDefault(go => go.name == "Scroll View");
-
-        if (scrollViewGO == null)
-        {
-            MelonLogger.Error("Could not find Scroll View in DeliveryApp");
-            contentT = null!;
-            return null;
-        }
-
-        var contentGO = Utils.GetAllComponentsInChildrenRecursive<Transform>(scrollViewGO)
-            .Select(t => t.gameObject)
-            .FirstOrDefault(go => go.name == "Content");
-
-        if (contentGO == null)
-        {
-            MelonLogger.Error("Could not find Content in Scroll View");
-            contentT = null!;
-            return null;
-        }
-
-        var content = contentGO.transform;
-
-        var shopComponents = new List<DeliveryShop>();
-        for (int i = 0; i < content.childCount; i++)
-        {
-            var child = content.GetChild(i);
-            var shop = child.GetComponent<DeliveryShop>();
-            if (shop != null)
-                shopComponents.Add(shop);
-        }
-
-        contentT = content;
-        return shopComponents;
     }
 }

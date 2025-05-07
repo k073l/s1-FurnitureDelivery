@@ -32,9 +32,11 @@ public class HerbertShop
         "dumpster",
     };
 
+    public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-HerbertShop");
+    
     public static void CreateHerbertShop(DeliveryApp app)
     {
-        MelonLogger.Msg("Creating Herbert's shop");
+        Logger.Debug("Creating Herbert's shop");
 
         var landVehicle = new LandVehicleBuilder()
             .WithVehicleName("LandVehicle_Herbert")
@@ -61,12 +63,13 @@ public class HerbertShop
 
         foreach (var item in wantedItems)
         {
-            MelonLogger.Msg($"Adding item {item.name} to Herbert's shop");
+            Logger.Debug($"Adding item {item.name} to Herbert's shop");
             shop.AddListing(item);
         }
         
         var builtShop = shop.Build();
         
-        DeliveryAppWithPosition.Finalize(app, builtShop);
+        DeliveryShopBuilder.Apply(app, builtShop);
+        Logger.Msg("Herbert's Curiosities created");
     }
 }

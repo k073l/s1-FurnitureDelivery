@@ -35,10 +35,12 @@ public static class DanShop
         "mediumstoragerack",
         "smallstoragerack",
     };
+    
+    public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-DanShop");
 
     public static void CreateDanShop(DeliveryApp app)
     {
-        MelonLogger.Msg("Creating Dan's Furniture shop");
+        Logger.Debug("Creating Dan's Furniture shop");
 #if !MONO
         var deliveryVehicle = VehicleManager.Instance.AllVehicles._items[0];
 #else
@@ -64,12 +66,13 @@ public static class DanShop
 
         foreach (var item in wantedItems)
         {
-            MelonLogger.Msg($"Adding item {item.name} to Dan's shop");
+            Logger.Debug($"Adding item {item.name} to Dan's shop");
             shop.AddListing(item);
         }
 
         var builtShop = shop.Build();
 
-        DeliveryAppWithPosition.Finalize(app, builtShop);
+        DeliveryShopBuilder.Apply(app, builtShop);
+        Logger.Msg("Dan's Furniture created");
     }
 }

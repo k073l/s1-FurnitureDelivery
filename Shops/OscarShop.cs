@@ -9,7 +9,6 @@ using ScheduleOne.UI.Phone.Delivery;
 using Il2CppScheduleOne.Vehicles;
 using Il2CppScheduleOne.UI.Phone.Delivery;
 #endif
-
 namespace FurnitureDelivery.Shops;
 
 public static class OscarShop
@@ -31,10 +30,12 @@ public static class OscarShop
         "brickpress",
         "bed"
     };
+    
+    public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-OscarShop");
 
     public static void CreateOscarShop(DeliveryApp app)
     {
-        MelonLogger.Msg("Creating Oscar's Equipment shop");
+        Logger.Debug("Creating Oscar's Equipment shop");
 
 #if !MONO
         var deliveryVehicle = VehicleManager.Instance.AllVehicles._items
@@ -46,7 +47,7 @@ public static class OscarShop
 
         if (deliveryVehicle == null)
         {
-            MelonLogger.Warning("Oscar delivery vehicle not found, using default vehicle");
+            Logger.Warning("Oscar delivery vehicle not found, using default vehicle");
 #if !MONO
             deliveryVehicle = VehicleManager.Instance.AllVehicles._items[0];
 #else
@@ -62,7 +63,7 @@ public static class OscarShop
             .WithShopImage(Utils.FindSprite("Oscar_Mugshot"))
             .SetAvailableByDefault(true)
             .WithDeliveryVehicle(DeliveryShopBuilder.GetOrCreateDeliveryVehicle(deliveryVehicle))
-            .SetPosition(6);
+            .SetPosition(7);
 
         var itemDefinitions = Utils.GetAllStorableItemDefinitions();
 
@@ -73,14 +74,14 @@ public static class OscarShop
 
         foreach (var item in wantedItems)
         {
-            MelonLogger.Msg($"Adding {item.ID} to Oscar's shop");
+            Logger.Debug($"Adding {item.ID} to Oscar's shop");
             builder.AddListing(item);
         }
 
         var builtShop = builder.Build();
-        DeliveryAppWithPosition.Finalize(app, builtShop);
+        DeliveryShopBuilder.Apply(app, builtShop);
 
-        MelonLogger.Msg("Oscar's Equipment shop created successfully");
+        Logger.Msg("Oscar's Equipment created");
 
         // Crucial - set oscar's shop go as disabled
         // to prevent it from being shown in the UI

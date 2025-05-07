@@ -9,6 +9,7 @@ using ScheduleOne.UI.Phone.Delivery;
 using ScheduleOne.UI.Shop;
 using ScheduleOne.ItemFramework;
 using ScheduleOne.Vehicles;
+
 #else
 using Il2CppScheduleOne.Delivery;
 using Il2CppScheduleOne.UI.Phone.Delivery;
@@ -36,13 +37,15 @@ public class DeliveryShopBuilder
 
     public static readonly Dictionary<LandVehicle, DeliveryVehicle> DeliveryVehicleRegistry = new();
 
+    public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-DeliveryShopBuilder");
+
 
     public DeliveryShopBuilder(DeliveryApp appInstance)
     {
         _deliveryShopTemplate = appInstance.GetComponentsInChildren<DeliveryShop>(true).FirstOrDefault();
         if (_deliveryShopTemplate == null)
         {
-            MelonLogger.Error("[DeliveryShopBuilder] No DeliveryShop template found in app.");
+            Logger.Error("No DeliveryShop template found in app.");
         }
     }
 
@@ -93,14 +96,14 @@ public class DeliveryShopBuilder
         var vehicleManager = VehicleManager.Instance;
         if (vehicleManager == null || vehicleManager.AllVehicles == null)
         {
-            MelonLogger.Error("[DeliveryShopBuilder] VehicleManager or AllVehicles is null.");
+            Logger.Error("VehicleManager or AllVehicles is null.");
             return;
         }
 
 #if !MONO
         foreach (var vehicle in vehicleManager.AllVehicles._items)
 #else
-            foreach (var vehicle in vehicleManager.AllVehicles)
+        foreach (var vehicle in vehicleManager.AllVehicles)
 #endif
         {
             if (vehicle == null) continue;
@@ -110,8 +113,8 @@ public class DeliveryShopBuilder
             }
         }
 
-        MelonLogger.Msg(
-            $"[DeliveryShopBuilder] Registered {DeliveryVehicleRegistry.Count} vehicles for lazy wrapping.");
+        Logger.Debug(
+            $"Registered {DeliveryVehicleRegistry.Count} vehicles for lazy wrapping.");
     }
 
     public static DeliveryVehicle GetOrCreateDeliveryVehicle(LandVehicle vehicle)
@@ -126,6 +129,7 @@ public class DeliveryShopBuilder
         GameObject vehicleObject = new GameObject($"DeliveryVehicle_{vehicle.name}");
         var deliveryVehicle = vehicleObject.AddComponent<DeliveryVehicle>();
         deliveryVehicle.Vehicle = vehicle;
+        deliveryVehicle.GUID = vehicle.GUID.ToString();
 
         DeliveryVehicleRegistry[vehicle] = deliveryVehicle;
 
@@ -145,7 +149,7 @@ public class DeliveryShopBuilder
         var firstVehicle = DeliveryVehicleRegistry.Keys.FirstOrDefault();
         if (firstVehicle == null)
         {
-            MelonLogger.Error("[DeliveryShopBuilder] No available vehicles registered.");
+            Logger.Error("No available vehicles registered.");
             return null;
         }
 
@@ -178,7 +182,7 @@ public class DeliveryShopBuilder
     {
         if (_deliveryShopTemplate == null)
         {
-            MelonLogger.Error("[DeliveryShopBuilder] Cannot build delivery shop without template.");
+            Logger.Error("Cannot build delivery shop without template.");
             return null;
         }
 
@@ -189,7 +193,7 @@ public class DeliveryShopBuilder
 #if !MONO
         newInterface.Listings = _listings.ToIl2CppList();
 #else
-               newInterface.Listings = _listings;
+        newInterface.Listings = _listings;
 #endif
         newInterface.DeliveryVehicle = CreateDeliveryVehicle();
 
@@ -254,11 +258,84 @@ public class DeliveryShopBuilder
         shopInstance.gameObject.SetActive(true);
         return shopInstance;
     }
-}
 
-public class ShopPositionInfo
-{
-    public int InsertPosition = -1;
+    public static List<DeliveryShop> GetInitializedShops(DeliveryApp app, out Transform contentT)
+    {
+        contentT = app.transform.Find("Container/Scroll View/Viewport/Content");
+
+        if (contentT == null)
+        {
+            Logger.Error("Could not find 'Container/Scroll View/Viewport/Content' under DeliveryApp");
+            return null;
+        }
+
+        var shopComponents = new List<DeliveryShop>();
+        for (int i = 0; i < contentT.childCount; i++)
+        {
+            var shop = contentT.GetChild(i).GetComponent<DeliveryShop>();
+            if (shop != null)
+                shopComponents.Add(shop);
+        }
+
+        return shopComponents;
+    }
+
+    public static void Apply(DeliveryApp app, DeliveryShop shop)
+    {
+        int insertPosition = -1;
+        if (ShopPositionRegistry.ShopPositions.TryGetValue(shop.gameObject.name, out int position))
+        {
+            insertPosition = position;
+            Logger.Debug($"Found position {insertPosition} for shop {shop.gameObject.name}");
+        }
+
+        if (insertPosition < 0)
+        {
+            insertPosition = app.deliveryShops.Count + insertPosition + 1;
+            if (insertPosition < 0) insertPosition = 0;
+        }
+
+        if (insertPosition > app.deliveryShops.Count)
+            insertPosition = app.deliveryShops.Count;
+
+        // Insert the shop at the specified position
+        if (insertPosition < app.deliveryShops.Count)
+        {
+            Logger.Debug($"Inserting shop at position {insertPosition}");
+            app.deliveryShops.Insert(insertPosition, shop);
+        }
+        else
+        {
+            Logger.Debug($"Adding shop to end at position {insertPosition}");
+            app.deliveryShops.Add(shop);
+        }
+
+        Logger.Msg($"Added new delivery shop to app: {shop.name}, {shop.gameObject.name}");
+
+        // fix hierarchy in UI
+        FixShopHierarchy(app);
+    }
+
+    private static void FixShopHierarchy(DeliveryApp app)
+    {
+        var shopComponents = GetInitializedShops(app, out var content);
+        Logger.Debug($"Found {shopComponents.Count} shop components in UI hierarchy");
+
+        for (int i = 0; i < app.deliveryShops.Count; i++)
+        {
+#if !MONO
+            var shop = app.deliveryShops._items[i];
+#else
+            var shop = app.deliveryShops[i];
+#endif
+            if (shop.gameObject.name == "Space" || shop.gameObject.name.Contains("Spacer"))
+                continue;
+
+            shop.transform.SetParent(content, false);
+            shop.transform.SetSiblingIndex(i);
+            Logger.Debug($"Set {shop.gameObject.name} to sibling index {i}");
+        }
+    }
 }
 
 public static class ShopPositionRegistry
