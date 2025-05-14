@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.3.5
+- Added [AK47 from Voidane's More Guns](https://thunderstore.io/c/schedule-i/p/Universal/MoreGuns/) to Armory
 ## 1.3.0
 - Added Armory delivery service
 ## 1.2.0

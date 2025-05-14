@@ -22,8 +22,9 @@
 
 	<!-- Paths to other mods that script should add (no guard for mono/il2cpp incompat) -->
 	<ItemGroup>
-<!--		<ModList Include="$(CommonDir)\Mods\DisclaimerSkipMono.dll" />-->
-		<ModList Include="$(CommonDir)\Mods\DisclaimerSkipIL2CPP.dll" />
+		<ModList Include="$(CommonDir)\Mods\DisclaimerSkipMono.dll" />
+<!--		<ModList Include="$(CommonDir)\Mods\DisclaimerSkipIL2CPP.dll" />-->
+<!--		<ModList Include="$(CommonDir)\Mods\MoreGunsMono.dll" />-->
 	</ItemGroup>
 	
 	<Import Project="build/conditions.props" />

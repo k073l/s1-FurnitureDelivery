@@ -1,4 +1,5 @@
 ﻿using FurnitureDelivery.Helpers;
+using FurnitureDelivery.Interop;
 using MelonLoader;
 using UnityEngine;
 
@@ -24,6 +25,8 @@ public class StanShop
         { "revolvercylinder", 10f },
         { "m1911", 2500f },
         { "m1911mag", 20f },
+        { "ak47", 15000f}, // moreguns
+        { "ak47mag", 1000f} // moreguns
     };
 
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-StanShop");
@@ -62,7 +65,18 @@ public class StanShop
         foreach (var item in wantedItems)
         {
             Logger.Debug($"Adding item {item.item.ID} to Stan's shop");
-            shop.AddListing(item.item, overridePrice: item.Value);
+            var v = item.Value;
+            if (item.item.ID == "ak47" || item.item.ID == "ak47mag")
+            {
+                // Try getting prices from MoreGuns
+                if (MoreGunsInterop.TryGetPrices("ak47", out float gunPrice, out float magPrice))
+                {
+                    v = item.item.ID == "ak47" ? gunPrice : magPrice;
+                    Logger.Msg($"Using MoreGuns price for '{item.item.ID}': {v}");
+                }
+            }
+            
+            shop.AddListing(item.item, overridePrice: v);
         }
 
         var builtShop = shop.Build();

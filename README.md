@@ -77,3 +77,6 @@ Weapons and ammo, delivered from the warehouse.
 - Revolver Cylinder
 - M1911
 - M1911 Magazine
+- AK47*
+- AK47 Magazine*
+* - Requires [More Guns](https://thunderstore.io/c/schedule-i/p/Universal/MoreGuns/) to be installed. Without it, those items will not be available.

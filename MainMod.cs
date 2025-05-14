@@ -7,6 +7,8 @@ using MelonLoader;
 [assembly: MelonColor(1, 255, 215, 0)]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
+[assembly: MelonOptionalDependencies("MoreGuns")]
+
 namespace FurnitureDelivery;
 
 public static class BuildInfo
@@ -14,7 +16,7 @@ public static class BuildInfo
     public const string Name = "FurnitureDelivery";
     public const string Description = "Adds a custom delivery shops for furniture items";
     public const string Author = "k073l";
-    public const string Version = "1.3";
+    public const string Version = "1.3.5";
 }
 
 public class FurnitureDelivery : MelonMod
@@ -25,5 +27,11 @@ public class FurnitureDelivery : MelonMod
     {
         MelonLogger = LoggerInstance;
         MelonLogger.Msg("FurnitureDelivery initialized");
+        
+        if (RegisteredMelons.Any(m => m.Info.Name == "MoreGuns"))
+        {
+            LoggerInstance.Msg("MoreGuns detected. Adding ak47 to Armory");
+        }
+        
     }
 }
