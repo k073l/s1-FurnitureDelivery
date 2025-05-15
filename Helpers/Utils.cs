@@ -1,15 +1,19 @@
-﻿using MelonLoader;
+﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
+using MelonLoader;
 using UnityEngine;
 
 #if MONO
 using ScheduleOne;
 using ScheduleOne.ItemFramework;
+using ScheduleOne.DevUtilities;
 using ScheduleOne.UI.Phone.Delivery;
 
 #else
 using Il2CppInterop.Runtime;
 using Il2CppScheduleOne;
 using Il2CppScheduleOne.ItemFramework;
+using Il2CppScheduleOne.DevUtilities;
 using Il2CppScheduleOne.UI.Phone.Delivery;
 using Object = Il2CppSystem.Object;
 #endif
@@ -141,5 +145,31 @@ public static class Utils
 
         return itemDefinitions
             .ToList();
+    }
+
+    public static IEnumerator WaitForNotNull([MaybeNull] object obj, float timeout = Single.NaN, Action onTimeout = null, Action onFinish = null)
+    {
+        float startTime = Time.time;
+
+        while (obj == null)
+        {
+            if (!float.IsNaN(timeout) && Time.time - startTime > timeout)
+            {
+                onTimeout?.Invoke();
+                yield break;
+            }
+
+            yield return null;
+        }
+        onFinish?.Invoke();
+    }
+
+
+    public static IEnumerator WaitForNetworkSingleton<T>(IEnumerator coroutine) where T : NetworkSingleton<T>
+    {
+        while (!NetworkSingleton<T>.InstanceExists)
+            yield return null;
+
+        yield return coroutine;
     }
 }

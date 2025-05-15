@@ -1,4 +1,14 @@
+using FurnitureDelivery.Helpers;
+using FurnitureDelivery.Interop;
+using System.Collections;
 using MelonLoader;
+using UnityEngine.Events;
+
+#if MONO
+using ScheduleOne.Delivery;
+#else
+using Il2CppScheduleOne.Delivery;
+#endif
 
 [assembly:
     MelonInfo(typeof(FurnitureDelivery.FurnitureDelivery), FurnitureDelivery.BuildInfo.Name,
@@ -30,8 +40,40 @@ public class FurnitureDelivery : MelonMod
         
         if (RegisteredMelons.Any(m => m.Info.Name == "MoreGuns"))
         {
-            LoggerInstance.Msg("MoreGuns detected. Adding ak47 to Armory");
+            MelonLogger.Msg("MoreGuns detected. Adding ak47 to Armory");
         }
-        
+        else if (RegisteredMelons.Any(m => m.Info.Name == "Toileportation"))
+        {
+            MelonLogger.Msg("Toileportation detected. Adding Golden Toilet to Herbert's shop");
+        }
+    }
+
+    public override void OnSceneWasLoaded(int buildIndex, string sceneName)
+    {
+        if (RegisteredMelons.Any(m => m.Info.Name == "Toileportation"))
+        {
+            if (sceneName == "Main")
+            {
+                MelonCoroutines.Start(Utils.WaitForNetworkSingleton<DeliveryManager>(OnDeliveryManagerReady()));
+                MelonLogger.Debug("Repatching CanOrder");
+                DeliveryShopCanOrderPatch.ApplyManualPatch();
+            }
+            if (sceneName == "Menu")
+            {
+                // cleanup
+                if (DeliveryManager.Instance != null)
+                {
+                    DeliveryManager.Instance.onDeliveryCreated.RemoveListener((UnityAction<DeliveryInstance>)ToileportationInterop.OnDeliveryCreated);
+                }
+                ToileportationInterop.GoldenToiletListing = null;
+            }
+        }
+    }
+
+    private static IEnumerator OnDeliveryManagerReady()
+    {
+        MelonLogger.Debug($"Delivery manager ready");
+        DeliveryManager.Instance.onDeliveryCreated.AddListener((UnityAction<DeliveryInstance>)ToileportationInterop.OnDeliveryCreated);
+        yield break;
     }
 }

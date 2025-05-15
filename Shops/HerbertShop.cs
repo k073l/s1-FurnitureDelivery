@@ -1,13 +1,16 @@
 ﻿using FurnitureDelivery.Helpers;
+using FurnitureDelivery.Interop;
 using MelonLoader;
 using UnityEngine;
 
 #if MONO
 using ScheduleOne.UI.Phone.Delivery;
+using ScheduleOne.UI.Shop;
 using ScheduleOne.Vehicles.Modification;
 
 #else
 using Il2CppScheduleOne.UI.Phone.Delivery;
+using Il2CppScheduleOne.UI.Shop;
 using Il2CppScheduleOne.Vehicles.Modification;
 #endif
 
@@ -65,6 +68,22 @@ public class HerbertShop
         {
             Logger.Debug($"Adding item {item.name} to Herbert's shop");
             shop.AddListing(item);
+        }
+        
+        // Toileportation Interop
+        if (FurnitureDelivery.RegisteredMelons.Any(m => m.Info.Name == "Toileportation"))
+        {
+            var toilet = ToileportationInterop.GoldenToiletListing;
+            if (toilet == null)
+            {
+                // wait for the item to be created
+                Logger.Warning("Golden toilet listing not found, waiting for it to be created");
+                MelonCoroutines.Start(Utils.WaitForNotNull(toilet));
+            }
+            toilet.CanBeDelivered = true;
+            Logger.Msg("Adding golden toilet to Herbert's shop");
+            shop.AddListing(toilet);
+            Logger.Debug($"{toilet.Shop}, {toilet.CurrentStock}, {toilet.Item.BasePurchasePrice}, {toilet.Item.ID}");
         }
 
         var builtShop = shop.Build();

@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿
 using FurnitureDelivery.Helpers;
+using FurnitureDelivery.Interop;
 using HarmonyLib;
 using MelonLoader;
-using UnityEngine;
+
 
 #if MONO
 using ScheduleOne.Delivery;
@@ -98,6 +99,17 @@ public class DeliveryShopCanOrderPatch
     public static bool Prefix(DeliveryShop __instance, out string reason, ref bool __result)
     {
         var shopName = __instance.gameObject.name;
+        
+        // If Herbert's, pass to ToileportationInterop
+        if (shopName.Contains("Herbert"))
+        {
+            __result = ToileportationInterop.CanOrder(InitializedShopsCache.GetShops("Herbert"), out reason);
+            if (!__result)
+            {
+                __result = false;
+                return false;
+            }
+        }
 
         // If it's not Dan or Oscar, allow default behavior
         if (!shopName.Contains("Dan") && !shopName.Contains("Oscar"))
@@ -140,6 +152,19 @@ public class DeliveryShopCanOrderPatch
 
         reason = string.Empty;
         return true;
+    }
+    
+    public static void ApplyManualPatch()
+    {
+        HarmonyLib.Harmony harmony = new HarmonyLib.Harmony("com.k0.furnituredelivery");
+        
+        if (!harmony.GetPatchedMethods().Contains(AccessTools.Method(typeof(DeliveryShop), "CanOrder")))
+        {
+            harmony.Patch(
+                original: AccessTools.Method(typeof(DeliveryShop), "CanOrder"),
+                prefix: new HarmonyMethod(typeof(DeliveryShopCanOrderPatch), "Prefix")
+            );
+        }
     }
 }
 

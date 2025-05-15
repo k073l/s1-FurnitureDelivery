@@ -170,6 +170,12 @@ public class DeliveryShopBuilder
         _listings.Add(listing);
         return this;
     }
+    
+    public DeliveryShopBuilder AddListing(ShopListing listing)
+    {
+        _listings.Add(listing);
+        return this;
+    }
 
     public DeliveryShopBuilder SetPosition(int position)
     {
