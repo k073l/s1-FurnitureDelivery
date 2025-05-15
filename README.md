@@ -14,6 +14,13 @@ Adds ordering furniture in deliveries.
 
 **Note:** Might cause issues with other Delivery mods. Make sure you have a backup if you use those.
 
+### Mod compatibility
+- [More Guns](https://thunderstore.io/c/schedule-i/p/Universal/MoreGuns/) - Adds AK47 and ammo to Armory delivery service.
+- [Toileportation](https://thunderstore.io/c/schedule-i/p/weedeej/Toileportation/) - Adds Golden Toilet to Herbert's Curiosities delivery service.
+- [UpgradedTrashCans](https://thunderstore.io/c/schedule-i/p/j0ckinjz/UpgradedTrashCans_Mono/) - Adds Trash Bin and Trash Compactor to Dan's Furniture delivery service.
+
+All of these mods are optional and not required for the mod to work.
+
 ### Delivery services added
 #### Dan's Furniture
 - Coffee Table
@@ -77,7 +84,3 @@ Weapons and ammo, delivered from the warehouse.
 - Revolver Cylinder
 - M1911
 - M1911 Magazine
-- AK47*
-- AK47 Magazine*
-
-\* \- Requires [More Guns](https://thunderstore.io/c/schedule-i/p/Universal/MoreGuns/) to be installed. Without it, those items will not be available.

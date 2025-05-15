@@ -22,8 +22,8 @@ public static class DanShop
         "woodsquaretable",
         "toilet",
         "trashcan",
-        "trash_bin",
-        "trash_compactor",
+        "trash_bin", // UpgradedTrashCans
+        "trash_compactor", // UpgradedTrashCans
         "bed",
         "TV",
         "floorlamp",
