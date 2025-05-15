@@ -17,7 +17,7 @@ using Il2CppScheduleOne.Delivery;
 [assembly: MelonColor(1, 255, 215, 0)]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
-[assembly: MelonOptionalDependencies("MoreGuns")]
+[assembly: MelonOptionalDependencies("MoreGuns", "Toileportation", "UpgradedTrashCans")]
 
 namespace FurnitureDelivery;
 
@@ -42,9 +42,13 @@ public class FurnitureDelivery : MelonMod
         {
             MelonLogger.Msg("MoreGuns detected. Adding ak47 to Armory");
         }
-        else if (RegisteredMelons.Any(m => m.Info.Name == "Toileportation"))
+        if (RegisteredMelons.Any(m => m.Info.Name == "Toileportation"))
         {
             MelonLogger.Msg("Toileportation detected. Adding Golden Toilet to Herbert's shop");
+        }
+        if (RegisteredMelons.Any(m => m.Info.Name == "UpgradedTrashCans"))
+        {
+            MelonLogger.Msg("UpgradedTrashCans detected. Adding trash bins to Dan's shop");
         }
     }
 
