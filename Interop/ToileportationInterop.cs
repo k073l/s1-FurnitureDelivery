@@ -25,7 +25,7 @@ public static class ToileportationInterop
         reason = string.Empty;
         // skip if no mod present
         if (FurnitureDelivery.RegisteredMelons.All(m => m.Info.Name != "Toileportation")) return true;
-        
+
         var inStock = GoldenToiletListing.CurrentStock;
         foreach (var shop in shops)
         {
@@ -41,9 +41,10 @@ public static class ToileportationInterop
                 }
             }
         }
+
         return true;
     }
-    
+
     public static void OnDeliveryCreated(DeliveryInstance delivery)
     {
         if (delivery == null) return;
@@ -69,9 +70,13 @@ public static class ToileportationInterop
     {
         public static void Postfix(ShopListing __instance)
         {
-            if (__instance == null) 
+            if (FurnitureDelivery.RegisteredMelons.All(m => m.Info.Name != "Toileportation"))
                 return;
-            if (!__instance.name.Contains("Golden Toilet")) 
+            if (__instance == null)
+                return;
+            if (string.IsNullOrEmpty(__instance.name))
+                return;
+            if (!__instance.name.Contains("Golden Toilet"))
                 return;
             GoldenToiletListing = __instance;
             Logger.Msg("Captured Golden Toilet listing");

@@ -9,7 +9,6 @@ using ScheduleOne.UI.Phone.Delivery;
 using ScheduleOne.UI.Shop;
 using ScheduleOne.ItemFramework;
 using ScheduleOne.Vehicles;
-
 #else
 using Il2CppScheduleOne.Delivery;
 using Il2CppScheduleOne.UI.Phone.Delivery;
@@ -100,11 +99,7 @@ public class DeliveryShopBuilder
             return;
         }
 
-#if !MONO
-        foreach (var vehicle in vehicleManager.AllVehicles._items)
-#else
-        foreach (var vehicle in vehicleManager.AllVehicles)
-#endif
+        foreach (var vehicle in vehicleManager.AllVehicles.AsEnumerable())
         {
             if (vehicle == null) continue;
             if (!DeliveryVehicleRegistry.ContainsKey(vehicle))
@@ -170,7 +165,7 @@ public class DeliveryShopBuilder
         _listings.Add(listing);
         return this;
     }
-    
+
     public DeliveryShopBuilder AddListing(ShopListing listing)
     {
         _listings.Add(listing);
@@ -329,11 +324,7 @@ public class DeliveryShopBuilder
 
         for (int i = 0; i < app.deliveryShops.Count; i++)
         {
-#if !MONO
-            var shop = app.deliveryShops._items[i];
-#else
-            var shop = app.deliveryShops[i];
-#endif
+            var shop = app.deliveryShops.AsEnumerable().ElementAt(i);
             if (shop.gameObject.name == "Space" || shop.gameObject.name.Contains("Spacer"))
                 continue;
 

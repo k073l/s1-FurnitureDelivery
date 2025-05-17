@@ -5,7 +5,6 @@ using UnityEngine;
 #if MONO
 using ScheduleOne.Vehicles;
 using ScheduleOne.UI.Phone.Delivery;
-
 #else
 using Il2CppScheduleOne.Vehicles;
 using Il2CppScheduleOne.UI.Phone.Delivery;
@@ -44,11 +43,7 @@ public static class DanShop
     public static void CreateDanShop(DeliveryApp app)
     {
         Logger.Debug("Creating Dan's Furniture shop");
-#if !MONO
-        var deliveryVehicle = VehicleManager.Instance.AllVehicles._items[0];
-#else
-        var deliveryVehicle = VehicleManager.Instance.AllVehicles.FirstOrDefault();
-#endif
+        var deliveryVehicle = VehicleManager.Instance.AllVehicles.AsEnumerable().FirstOrDefault();
 
         var shop = new DeliveryShopBuilder(app)
             .WithShopName("Dan's Furniture")

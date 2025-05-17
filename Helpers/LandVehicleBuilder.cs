@@ -24,7 +24,7 @@ public class LandVehicleBuilder
     public static List<LandVehicle> VehiclePrefabs = NetworkSingleton<VehicleManager>.Instance.VehiclePrefabs;
 #else
     public static List<LandVehicle> VehiclePrefabs =
-        Il2CppListExtensions.ConvertToList(NetworkSingleton<VehicleManager>.Instance.VehiclePrefabs);
+        NetworkSingleton<VehicleManager>.Instance.VehiclePrefabs.ConvertToList();
 #endif
 
     public LandVehicleBuilder()

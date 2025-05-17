@@ -5,7 +5,6 @@ using UnityEngine;
 #if MONO
 using ScheduleOne.Vehicles;
 using ScheduleOne.UI.Phone.Delivery;
-
 #else
 using Il2CppScheduleOne.Vehicles;
 using Il2CppScheduleOne.UI.Phone.Delivery;
@@ -38,23 +37,13 @@ public static class OscarShop
     public static void CreateOscarShop(DeliveryApp app)
     {
         Logger.Debug("Creating Oscar's Equipment shop");
-
-#if !MONO
-        var deliveryVehicle = VehicleManager.Instance.AllVehicles._items
+        var deliveryVehicle = VehicleManager.Instance.AllVehicles.AsEnumerable()
             .FirstOrDefault(item => item != null && item.name.Contains("Oscar"));
-#else
-        var deliveryVehicle = VehicleManager.Instance.AllVehicles
-            .FirstOrDefault(item => item != null && item.name.Contains("Oscar"));
-#endif
 
         if (deliveryVehicle == null)
         {
             Logger.Warning("Oscar delivery vehicle not found, using default vehicle");
-#if !MONO
-            deliveryVehicle = VehicleManager.Instance.AllVehicles._items[0];
-#else
-            deliveryVehicle = VehicleManager.Instance.AllVehicles.FirstOrDefault();
-#endif
+            deliveryVehicle = VehicleManager.Instance.AllVehicles.AsEnumerable().FirstOrDefault();
         }
 
         var builder = new DeliveryShopBuilder(app)

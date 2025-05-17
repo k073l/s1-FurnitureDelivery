@@ -16,15 +16,21 @@ using Il2CppScheduleOne.ItemFramework;
 using Il2CppScheduleOne.DevUtilities;
 using Il2CppScheduleOne.UI.Phone.Delivery;
 using Object = Il2CppSystem.Object;
+using Il2CppList = Il2CppSystem.Collections.Generic;
 #endif
 
 
 namespace FurnitureDelivery.Helpers;
 
 
-#if !MONO
+
 public static class Il2CppListExtensions
 {
+    public static IEnumerable<T> AsEnumerable<T>(this List<T> list)
+    {
+        return list ?? [];
+    }
+#if !MONO
     public static Il2CppSystem.Collections.Generic.List<T> ToIl2CppList<T>(this IEnumerable<T> source)
     {
         var il2CppList = new Il2CppSystem.Collections.Generic.List<T>();
@@ -33,15 +39,21 @@ public static class Il2CppListExtensions
         return il2CppList;
     }
 
-    public static List<T> ConvertToList<T>(Il2CppSystem.Collections.Generic.List<T> il2CppList)
+    public static List<T> ConvertToList<T>(this Il2CppSystem.Collections.Generic.List<T> il2CppList)
     {
         List<T> csharpList = new List<T>();
         T[] array = il2CppList.ToArray();
         csharpList.AddRange(array);
         return csharpList;
     }
-}
+
+    public static IEnumerable<T> AsEnumerable<T>(this Il2CppList.List<T> list)
+    {
+        return list == null ? [] : list._items.Take(list._size);
+    }
 #endif
+}
+
 
 public static class Utils
 {

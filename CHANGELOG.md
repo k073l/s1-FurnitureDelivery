@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.4.1
+- (Hopefully) fixed the rare exception in ToileportationInterop patch
 ## 1.4.0
 - Added compatibility with [Toileportation](https://thunderstore.io/c/schedule-i/p/weedeej/Toileportation/) - adds Golden Toilet to Herbert's Curiosities
 - Added compatibility with [UpgradedTrashCans](https://thunderstore.io/c/schedule-i/p/j0ckinjz/UpgradedTrashCans_Mono/) - adds Trash Bin and Trash Compactor to Dan's Furniture
