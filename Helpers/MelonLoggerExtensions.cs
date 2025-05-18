@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
 using MelonLoader;
+using System.Drawing;
 
 namespace FurnitureDelivery.Helpers;
 
@@ -8,16 +10,41 @@ public static class MelonLoggerExtensions
     public static void Debug(this MelonLogger.Instance logger, string message, bool stacktrace = true)
     {
 #if RELEASE
-        // if the build is in release mode, do not log debug messages
+        // Suppress debug logs in Release
 #else
-        if (stacktrace)
-        {
-            var caller = GetCallerInfo();
-            logger.Msg($"[DEBUG] {caller} - {message}");
-        }
-        else
-            logger.Msg($"[DEBUG] {message}");
+        var melon = MelonUtils.GetMelonFromStackTrace();
+        var namesection_color = MelonLogger.DefaultMelonColor;
+        if (melon is { Info: not null })
+            namesection_color = melon.ConsoleColor;
+
+        var name = GetLoggerName(logger);
+        var finalMessage = stacktrace
+            ? $"[DEBUG] {GetCallerInfo()} - {message}"
+            : $"[DEBUG] {message}";
+
+        InvokeNativeMsg(namesection_color, MelonLogger.DefaultTextColor, name, finalMessage);
 #endif
+    }
+
+    private static string GetLoggerName(MelonLogger.Instance logger)
+    {
+        var field = typeof(MelonLogger.Instance)
+            .GetField("Name", BindingFlags.NonPublic | BindingFlags.Instance);
+        return field?.GetValue(logger) as string;
+    }
+
+    private static void InvokeNativeMsg(Color namesectionColor, Color textColor, string nameSection, string message)
+    {
+        var method = typeof(MelonLogger)
+            .GetMethod("NativeMsg", BindingFlags.NonPublic | BindingFlags.Static);
+
+        method?.Invoke(null, new object[] {
+            namesectionColor,
+            textColor,
+            nameSection,
+            message ?? "null",
+            false // skipStackWalk
+        });
     }
 
     private static string GetCallerInfo()

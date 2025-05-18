@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.4.2
+- Moved initial delivery vehicles position to the inaccessible woods behind the barrier
 ## 1.4.1
 - (Hopefully) fixed the rare exception in ToileportationInterop patch
 ## 1.4.0

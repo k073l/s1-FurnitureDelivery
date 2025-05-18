@@ -69,7 +69,7 @@ public class LandVehicleBuilder
 
     public LandVehicle Build()
     {
-        Vector3 position = new Vector3();
+        Vector3 position = new Vector3(130f, 50f, -250f);
         Quaternion rotation = Quaternion.identity;
 
         var component =
