@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.5.0
+- Added newly (0.3.6) lockers to Dan's Furniture and replaced the bed with locker in Oscar's Equipment (on versions older than 0.3.6 bed is removed from Oscar's and no replacement is provided)
 ## 1.4.2
 - Moved initial delivery vehicles position to the inaccessible woods behind the barrier
 ## 1.4.1

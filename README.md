@@ -29,6 +29,7 @@ All of these mods are optional and not required for the mod to work.
 - Toilet
 - Trashcan
 - Bed
+- Locker
 - TV
 - Floor Lamp
 - Grow Tent
@@ -57,7 +58,7 @@ Will appear in the deliveries app alongside Oscar's supply store.
 - Lab Oven
 - Cauldron
 - Brick Press
-- Bed
+- Locker
 
 #### Herbert's Curiosities
 Some of the items offered by the boutique, alongside exclusive, not-available-anywhere-else items.

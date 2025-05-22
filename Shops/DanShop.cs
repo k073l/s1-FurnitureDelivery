@@ -24,6 +24,7 @@ public static class DanShop
         "trash_bin", // UpgradedTrashCans
         "trash_compactor", // UpgradedTrashCans
         "bed",
+        "locker",
         "TV",
         "floorlamp",
         "growtent",

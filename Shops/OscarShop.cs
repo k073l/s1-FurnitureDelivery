@@ -29,7 +29,7 @@ public static class OscarShop
         "laboven",
         "cauldron",
         "brickpress",
-        "bed"
+        "locker"
     };
 
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-OscarShop");
