@@ -156,7 +156,7 @@ public class DeliveryShopCanOrderPatch
     
     public static void ApplyManualPatch()
     {
-        HarmonyLib.Harmony harmony = new HarmonyLib.Harmony("com.k0.furnituredelivery");
+        var harmony = Melon<FurnitureDelivery>.Instance.HarmonyInstance;
         
         if (!harmony.GetPatchedMethods().Contains(AccessTools.Method(typeof(DeliveryShop), "CanOrder")))
         {

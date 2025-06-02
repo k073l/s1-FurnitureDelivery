@@ -17,7 +17,7 @@ using Il2CppScheduleOne.Delivery;
 [assembly: MelonColor(1, 255, 215, 0)]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
-[assembly: MelonOptionalDependencies("MoreGuns", "Toileportation", "UpgradedTrashCans")]
+[assembly: MelonOptionalDependencies("MoreGuns", "Toileportation", "UpgradedTrashCans", "DeliveryApp++")]
 
 namespace FurnitureDelivery;
 
@@ -26,7 +26,7 @@ public static class BuildInfo
     public const string Name = "FurnitureDelivery";
     public const string Description = "Adds a custom delivery shops for furniture items";
     public const string Author = "k073l";
-    public const string Version = "1.5.0";
+    public const string Version = "1.6.0";
 }
 
 public class FurnitureDelivery : MelonMod
@@ -37,16 +37,18 @@ public class FurnitureDelivery : MelonMod
     {
         MelonLogger = LoggerInstance;
         MelonLogger.Msg("FurnitureDelivery initialized");
-        
-        if (RegisteredMelons.Any(m => m.Info.Name == "MoreGuns"))
+
+        if (RegisteredMelons.Any(m => m.Info.Name.Contains("MoreGuns")))
         {
             MelonLogger.Msg("MoreGuns detected. Adding ak47 to Armory");
         }
-        if (RegisteredMelons.Any(m => m.Info.Name == "Toileportation"))
+
+        if (RegisteredMelons.Any(m => m.Info.Name.Contains("Toileportation")))
         {
             MelonLogger.Msg("Toileportation detected. Adding Golden Toilet to Herbert's shop");
         }
-        if (RegisteredMelons.Any(m => m.Info.Name == "UpgradedTrashCans"))
+
+        if (RegisteredMelons.Any(m => m.Info.Name.Contains("UpgradedTrashCans")))
         {
             MelonLogger.Msg("UpgradedTrashCans detected. Adding trash bins to Dan's shop");
         }
@@ -54,7 +56,7 @@ public class FurnitureDelivery : MelonMod
 
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
-        if (RegisteredMelons.Any(m => m.Info.Name == "Toileportation"))
+        if (RegisteredMelons.Any(m => m.Info.Name.Contains("Toileportation")))
         {
             if (sceneName == "Main")
             {
@@ -62,22 +64,32 @@ public class FurnitureDelivery : MelonMod
                 MelonLogger.Debug("Repatching CanOrder");
                 DeliveryShopCanOrderPatch.ApplyManualPatch();
             }
+
             if (sceneName == "Menu")
             {
                 // cleanup
                 if (DeliveryManager.Instance != null)
                 {
-                    DeliveryManager.Instance.onDeliveryCreated.RemoveListener((UnityAction<DeliveryInstance>)ToileportationInterop.OnDeliveryCreated);
+                    DeliveryManager.Instance.onDeliveryCreated.RemoveListener(
+                        (UnityAction<DeliveryInstance>)ToileportationInterop.OnDeliveryCreated);
                 }
+
                 ToileportationInterop.GoldenToiletListing = null;
             }
+        }
+
+        if (RegisteredMelons.Any(m => m.Info.Name.Contains("DeliveryApp++")))
+        {
+            MelonLogger.Msg("DeliveryAppPlusPlus detected. Applying patches");
+            DeliveryAppPlusPlusInterop.ApplyPatches();
         }
     }
 
     private static IEnumerator OnDeliveryManagerReady()
     {
         MelonLogger.Debug($"Delivery manager ready");
-        DeliveryManager.Instance.onDeliveryCreated.AddListener((UnityAction<DeliveryInstance>)ToileportationInterop.OnDeliveryCreated);
+        DeliveryManager.Instance.onDeliveryCreated.AddListener(
+            (UnityAction<DeliveryInstance>)ToileportationInterop.OnDeliveryCreated);
         yield break;
     }
 }

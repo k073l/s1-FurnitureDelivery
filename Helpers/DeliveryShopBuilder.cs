@@ -1,15 +1,19 @@
-﻿using MelonLoader;
+﻿using FurnitureDelivery.Interop;
+using MelonLoader;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 #if MONO
+using TMPro;
 using ScheduleOne.Delivery;
 using ScheduleOne.UI.Phone.Delivery;
 using ScheduleOne.UI.Shop;
 using ScheduleOne.ItemFramework;
 using ScheduleOne.Vehicles;
 #else
+using Il2CppTMPro;
 using Il2CppScheduleOne.Delivery;
 using Il2CppScheduleOne.UI.Phone.Delivery;
 using Il2CppScheduleOne.UI.Shop;
@@ -178,6 +182,35 @@ public class DeliveryShopBuilder
         return this;
     }
 
+    
+    CartEntry CreateCartEntryPrefab()
+    {
+        var go = new GameObject("CartEntry");
+        var cartEntry = go.AddComponent<CartEntry>();
+        
+        var nameGO = new GameObject("NameLabel");
+        cartEntry.NameLabel = nameGO.AddComponent<TextMeshProUGUI>();
+        nameGO.transform.SetParent(go.transform, false);
+
+        var priceGO = new GameObject("PriceLabel");
+        cartEntry.PriceLabel = priceGO.AddComponent<TextMeshProUGUI>();
+        priceGO.transform.SetParent(go.transform, false);
+
+        var incBtnGO = new GameObject("IncrementButton");
+        cartEntry.IncrementButton = incBtnGO.AddComponent<Button>();
+        incBtnGO.transform.SetParent(go.transform, false);
+
+        var decBtnGO = new GameObject("DecrementButton");
+        cartEntry.DecrementButton = decBtnGO.AddComponent<Button>();
+        decBtnGO.transform.SetParent(go.transform, false);
+
+        var removeBtnGO = new GameObject("RemoveButton");
+        cartEntry.RemoveButton = removeBtnGO.AddComponent<Button>();
+        removeBtnGO.transform.SetParent(go.transform, false);
+
+        return cartEntry;
+    }
+
 
     public DeliveryShop Build()
     {
@@ -191,18 +224,47 @@ public class DeliveryShopBuilder
         var newInterface = shopObj.AddComponent<ShopInterface>();
 
         newInterface.ShopName = _shopName;
+        
 #if !MONO
         newInterface.Listings = _listings.ToIl2CppList();
 #else
         newInterface.Listings = _listings;
 #endif
+        foreach (var item in _listings)
+        {
+            item.Shop = newInterface;
+        }
         newInterface.DeliveryVehicle = CreateDeliveryVehicle();
+        newInterface.ShopCode = _shopName;
 
+        var cart = newInterface.gameObject.AddComponent<Cart>();
+        cart.name = $"Cart_{_shopName}";
+        cart.Shop = newInterface;
+        cart.TotalText = cart.gameObject.AddComponent<TextMeshProUGUI>();
+        cart.WarningText = cart.gameObject.AddComponent<TextMeshProUGUI>();
+        cart.ProblemText = cart.gameObject.AddComponent<TextMeshProUGUI>();
+        cart.ViewCartText = cart.gameObject.AddComponent<TextMeshProUGUI>();
+        
+        cart.BuyButton = cart.gameObject.AddComponent<Button>();
+        cart.LoadVehicleToggle = cart.gameObject.AddComponent<Toggle>();
+        cart.CartArea = cart.gameObject.AddComponent<Image>();
+        
+        cart.EntryPrefab = CreateCartEntryPrefab();
+        
+        GameObject container = new GameObject("CartEntryContainer");
+        container.transform.SetParent(cart.transform);
+        cart.CartEntryContainer = container.AddComponent<RectTransform>();
+        
+        
+        Logger.Debug($"Cart for shop {_shopName} is {cart.name} and is {cart.gameObject.activeSelf}");
+        newInterface.Cart = cart;
+        
         ShopInterface.AllShops.Add(newInterface);
 
         DeliveryShop shopInstance =
             Object.Instantiate(_deliveryShopTemplate, _deliveryShopTemplate.transform.parent);
         shopInstance.MatchingShopInterfaceName = _shopName;
+        shopInstance.MatchingShop = newInterface;
         shopInstance.DeliveryFee = _deliveryFee;
         shopInstance.AvailableByDefault = _availableByDefault;
         shopInstance.gameObject.name = $"DeliveryShop_{_shopName}";

@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.6.0
+- Added compatibility with [DeliveryApp Improvements](https://www.nexusmods.com/schedule1/mods/521)
 ## 1.5.0
 - Added newly (0.3.6) lockers to Dan's Furniture and replaced the bed with locker in Oscar's Equipment (on versions older than 0.3.6 bed is removed from Oscar's and no replacement is provided)
 ## 1.4.2
