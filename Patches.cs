@@ -8,12 +8,15 @@ using MelonLoader;
 #if MONO
 using ScheduleOne.Delivery;
 using ScheduleOne.DevUtilities;
+using ScheduleOne.PlayerScripts;
 using ScheduleOne.UI.Phone.Delivery;
-
+using ScheduleOne.Vehicles;
 #else
 using Il2CppScheduleOne.Delivery;
 using Il2CppScheduleOne.DevUtilities;
+using Il2CppScheduleOne.PlayerScripts;
 using Il2CppScheduleOne.UI.Phone.Delivery;
+using Il2CppScheduleOne.Vehicles;
 #endif
 
 namespace FurnitureDelivery;
@@ -183,5 +186,27 @@ public class DeliveryAppAwakePatch
         Shops.HerbertShop.CreateHerbertShop(app);
         Shops.OscarShop.CreateOscarShop(app);
         Shops.StanShop.CreateStanShop(app);
+    }
+}
+
+[HarmonyPatch(typeof(VehicleCamera))]
+public static class VehicleCameraPatch
+{
+    [HarmonyPrefix]
+    [HarmonyPatch("LateUpdate")]
+    public static bool SafeLateUpdatePrefix(VehicleCamera __instance)
+    {
+        return __instance.vehicle != null &&
+               __instance.cameraOrigin != null &&
+               PlayerSingleton<PlayerCamera>.Instance != null;
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch("Update")]
+    public static bool SafeUpdatePrefix(VehicleCamera __instance)
+    {
+        return __instance.vehicle != null &&
+               __instance.cameraOrigin != null &&
+               PlayerSingleton<PlayerCamera>.Instance != null;
     }
 }

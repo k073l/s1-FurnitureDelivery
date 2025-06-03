@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.6.1
+- Fix: VehicleCamera null reference Player.log spam
 ## 1.6.0
 - Added compatibility with [DeliveryApp Improvements](https://www.nexusmods.com/schedule1/mods/521)
 ## 1.5.0
