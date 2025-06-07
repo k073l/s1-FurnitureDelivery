@@ -18,6 +18,7 @@ Adds ordering furniture in deliveries.
 - [More Guns](https://thunderstore.io/c/schedule-i/p/Universal/MoreGuns/) - Adds AK47 and ammo to Armory delivery service.
 - [Toileportation](https://thunderstore.io/c/schedule-i/p/weedeej/Toileportation/) - Adds Golden Toilet to Herbert's Curiosities delivery service.
 - [UpgradedTrashCans](https://thunderstore.io/c/schedule-i/p/j0ckinjz/UpgradedTrashCans_Mono/) - Adds Trash Bin and Trash Compactor to Dan's Furniture delivery service.
+- [DeliveryApp Improvements](https://www.nexusmods.com/schedule1/mods/521) - Delivery services added by FurnitureDelivery can be automated using this mod.
 
 All of these mods are optional and not required for the mod to work.
 

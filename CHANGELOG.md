@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.6.2
+- Fix: DeliveryApp Improvements compatibility - saved deliveries were reporting "Select a destination"
 ## 1.6.1
 - Fix: VehicleCamera null reference Player.log spam
 ## 1.6.0
