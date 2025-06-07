@@ -1,5 +1,4 @@
-﻿
-using FurnitureDelivery.Helpers;
+﻿using FurnitureDelivery.Helpers;
 using FurnitureDelivery.Interop;
 using HarmonyLib;
 using MelonLoader;
@@ -99,38 +98,31 @@ class InitializedShopsCache
 [HarmonyPatch(typeof(DeliveryShop), "CanOrder")]
 public class DeliveryShopCanOrderPatch
 {
-    public static bool Prefix(DeliveryShop __instance, out string reason, ref bool __result)
+    public static bool HandleAddedShops(DeliveryShop shop, out string reason, ref bool result)
     {
-        var shopName = __instance.gameObject.name;
-        
+        var shopName = shop.gameObject.name;
+
         // If Herbert's, pass to ToileportationInterop
         if (shopName.Contains("Herbert"))
         {
-            __result = ToileportationInterop.CanOrder(InitializedShopsCache.GetShops("Herbert"), out reason);
-            if (!__result)
+            result = ToileportationInterop.CanOrder(InitializedShopsCache.GetShops("Herbert"), out reason);
+            if (!result)
             {
-                __result = false;
+                result = false;
                 return false;
             }
-        }
-
-        // If it's not Dan or Oscar, allow default behavior
-        if (!shopName.Contains("Dan") && !shopName.Contains("Oscar"))
-        {
-            reason = string.Empty;
-            return true;
         }
 
         if (shopName.Contains("Dan"))
         {
             var danShops = InitializedShopsCache.GetShops("Dan");
 
-            foreach (var shop in danShops)
+            foreach (var danShop in danShops)
             {
-                bool active = NetworkSingleton<DeliveryManager>.Instance.GetActiveShopDelivery(shop) != null;
+                var active = NetworkSingleton<DeliveryManager>.Instance.GetActiveShopDelivery(danShop) != null;
                 if (active)
                 {
-                    __result = false;
+                    result = false;
                     reason = "Dan is currently delivering an order";
                     return false;
                 }
@@ -141,12 +133,12 @@ public class DeliveryShopCanOrderPatch
         {
             var oscarShops = InitializedShopsCache.GetShops("Oscar");
 
-            foreach (var shop in oscarShops)
+            foreach (var oscarShop in oscarShops)
             {
-                bool active = NetworkSingleton<DeliveryManager>.Instance.GetActiveShopDelivery(shop) != null;
+                var active = NetworkSingleton<DeliveryManager>.Instance.GetActiveShopDelivery(oscarShop) != null;
                 if (active)
                 {
-                    __result = false;
+                    result = false;
                     reason = "Oscar is currently delivering an order";
                     return false;
                 }
@@ -156,11 +148,18 @@ public class DeliveryShopCanOrderPatch
         reason = string.Empty;
         return true;
     }
-    
+
+    public static bool Prefix(DeliveryShop __instance, out string reason, ref bool __result)
+    {
+        return
+            HandleAddedShops(__instance, out reason,
+                ref __result); // run checks for added shops, if none fail, proceed with base game checks
+    }
+
     public static void ApplyManualPatch()
     {
         var harmony = Melon<FurnitureDelivery>.Instance.HarmonyInstance;
-        
+
         if (!harmony.GetPatchedMethods().Contains(AccessTools.Method(typeof(DeliveryShop), "CanOrder")))
         {
             harmony.Patch(

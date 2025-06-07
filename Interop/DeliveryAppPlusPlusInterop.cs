@@ -81,17 +81,14 @@ public class DeliveryAppPlusPlusInterop
 
 #if MONO
     private static bool OnReorder_Prefix(object __0)
-	{
-		try
-		{
-			var deliveryInfoType = __0.GetType();
 #else
     private static bool OnReorder_Prefix(Il2CppObjectBase __0) // __0 is DeliveryInfo
+#endif
     {
 	    try
 	    {
 		    var deliveryInfoType = __0.GetType();
-#endif
+
 		    // try to get 'instance' field
 		    var instanceField = deliveryInfoType.GetField("instance", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 		    if (instanceField == null)
@@ -117,7 +114,8 @@ public class DeliveryAppPlusPlusInterop
 		    }
 
 		    var shop = PlayerSingleton<DeliveryApp>.Instance.GetShop(storeName);
-		    _ = shop.CanOrder(out var reason);
+		    var unused = true;
+		    _ = DeliveryShopCanOrderPatch.HandleAddedShops(shop, out var reason, ref unused);
 		    // check if we can order from this shop
 		    if (!string.IsNullOrEmpty(reason))
 		    {
