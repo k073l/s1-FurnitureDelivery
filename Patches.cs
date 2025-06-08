@@ -174,10 +174,12 @@ public class DeliveryShopCanOrderPatch
 public class DeliveryAppAwakePatch
 {
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-AppAwake");
+    private static bool _addedShops = false;
 
     public static void Postfix(DeliveryApp __instance)
     {
         Logger.Debug("DeliveryApp Awake called");
+        if (_addedShops) return;
 
         var app = PlayerSingleton<DeliveryApp>.Instance;
 
@@ -185,6 +187,7 @@ public class DeliveryAppAwakePatch
         Shops.HerbertShop.CreateHerbertShop(app);
         Shops.OscarShop.CreateOscarShop(app);
         Shops.StanShop.CreateStanShop(app);
+        _addedShops = true;
     }
 }
 
