@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.3
+- Compatibility with mods that use DeliveryApp as a foundation for their custom apps like [MoreRealisticSleeping](https://thunderstore.io/c/schedule-i/p/KampfBallerina/MoreRealisticSleeping/) and [MoreRealisticLaundering](https://thunderstore.io/c/schedule-i/p/KampfBallerina/MoreRealisticLaundering/)
+- Updated guns from [More Guns](https://thunderstore.io/c/schedule-i/p/Universal/MoreGuns/) guns from 1.2.1
+- Added a compatibility notice for [UI Dark Mode](https://www.nexusmods.com/schedule1/mods/554) - Errors are thrown, but the mod works fine
 ## 1.6.2
 - Fix: DeliveryApp Improvements compatibility - saved deliveries were reporting "Select a destination"
 ## 1.6.1
