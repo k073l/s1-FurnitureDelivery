@@ -129,6 +129,7 @@ public class DeliveryShopBuilder
         var deliveryVehicle = vehicleObject.AddComponent<DeliveryVehicle>();
         deliveryVehicle.Vehicle = vehicle;
         deliveryVehicle.GUID = vehicle.GUID.ToString();
+        Logger.Debug($"Created new DeliveryVehicle for {vehicle.name} with GUID {deliveryVehicle.GUID} and vehicle GUID {vehicle.GUID}");
 
         DeliveryVehicleRegistry[vehicle] = deliveryVehicle;
 

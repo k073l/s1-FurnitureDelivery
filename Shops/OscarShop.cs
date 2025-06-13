@@ -46,6 +46,7 @@ public static class OscarShop
             deliveryVehicle = VehicleManager.Instance.AllVehicles.AsEnumerable().FirstOrDefault();
         }
 
+        Logger.Debug($"Found delivery vehicle: {deliveryVehicle?.name} with guid {deliveryVehicle?.GUID}");
         var builder = new DeliveryShopBuilder(app)
             .WithShopName("Oscar's Equipment")
             .WithShopDescription("'Specialized' equipment")
