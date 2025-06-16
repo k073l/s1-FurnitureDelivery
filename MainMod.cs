@@ -2,6 +2,7 @@ using FurnitureDelivery.Helpers;
 using FurnitureDelivery.Interop;
 using System.Collections;
 using MelonLoader;
+using UnityEngine;
 using UnityEngine.Events;
 
 #if MONO
@@ -26,7 +27,7 @@ public static class BuildInfo
     public const string Name = "FurnitureDelivery";
     public const string Description = "Adds a custom delivery shops for furniture items";
     public const string Author = "k073l";
-    public const string Version = "1.6.3";
+    public const string Version = "1.7.0";
 }
 
 public class FurnitureDelivery : MelonMod
@@ -78,10 +79,14 @@ public class FurnitureDelivery : MelonMod
             }
         }
 
-        if (RegisteredMelons.Any(m => m.Info.Name.Contains("DeliveryApp++")))
+        if (sceneName == "Main")
         {
-            MelonLogger.Msg("DeliveryAppPlusPlus detected. Applying patches");
-            DeliveryAppPlusPlusInterop.ApplyPatches();
+            DeliveryAppAwakePatch.AddedShops = false; // reset the flag to allow adding shops again if exited to menu
+            if (RegisteredMelons.Any(m => m.Info.Name.Contains("DeliveryApp++")))
+            {
+                MelonLogger.Msg("DeliveryAppPlusPlus detected. Applying patches");
+                DeliveryAppPlusPlusInterop.ApplyPatches();
+            }
         }
     }
 

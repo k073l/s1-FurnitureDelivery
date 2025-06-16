@@ -1,4 +1,5 @@
-﻿using FurnitureDelivery.Helpers;
+﻿using System.Collections;
+using FurnitureDelivery.Helpers;
 using FurnitureDelivery.Interop;
 using HarmonyLib;
 using MelonLoader;
@@ -174,20 +175,18 @@ public class DeliveryShopCanOrderPatch
 public class DeliveryAppAwakePatch
 {
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-AppAwake");
-    private static bool _addedShops = false;
+    public static bool AddedShops = false;
 
     public static void Postfix(DeliveryApp __instance)
     {
         Logger.Debug("DeliveryApp Awake called");
-        if (_addedShops) return;
-
+        if (AddedShops) return;
         var app = PlayerSingleton<DeliveryApp>.Instance;
-
         Shops.DanShop.CreateDanShop(app);
         Shops.HerbertShop.CreateHerbertShop(app);
         Shops.OscarShop.CreateOscarShop(app);
         Shops.StanShop.CreateStanShop(app);
-        _addedShops = true;
+        AddedShops = true;
     }
 }
 

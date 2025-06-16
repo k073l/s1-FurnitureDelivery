@@ -4,14 +4,17 @@ using MelonLoader;
 using UnityEngine;
 
 #if MONO
+using FishNet;
 using ScheduleOne.UI.Phone.Delivery;
 using ScheduleOne.UI.Shop;
 using ScheduleOne.Vehicles.Modification;
-
+using ScheduleOne.Vehicles;
 #else
+using Il2CppFishNet;
 using Il2CppScheduleOne.UI.Phone.Delivery;
 using Il2CppScheduleOne.UI.Shop;
 using Il2CppScheduleOne.Vehicles.Modification;
+using Il2CppScheduleOne.Vehicles;
 #endif
 
 namespace FurnitureDelivery.Shops;
@@ -41,13 +44,27 @@ public class HerbertShop
     {
         Logger.Debug("Creating Herbert's shop");
 
-        var landVehicle = new LandVehicleBuilder()
-            .WithVehicleName("LandVehicle_Herbert")
-            .WithVehicleCode("veeper")
-            .WithPlayerOwned(false)
-            .WithColor(EVehicleColor.DarkBlue)
-            .Build();
-
+        LandVehicle landVehicle = null;
+        if (!InstanceFinder.IsServer)
+        {
+            Logger.Debug("Syncing vehicles");
+            VehicleSync.SyncVehicles();
+            Logger.Debug("Not on server, trying to find Herbert's land vehicle");
+            landVehicle = Utils.GetNotNullWithTimeout<LandVehicle>(() => VehicleSync.GetVehicleByName("LandVehicle_Herbert"));
+        }
+        else
+        {
+            Logger.Debug("On server, creating Herbert's land vehicle");
+            landVehicle = new LandVehicleBuilder()
+                .WithVehicleName("LandVehicle_Herbert")
+                .WithVehicleCode("veeper")
+                .WithPlayerOwned(false)
+                .WithColor(EVehicleColor.DarkBlue)
+                .Build();
+        }
+        
+        Logger.Debug($"Found land vehicle: {landVehicle?.name} with guid {landVehicle?.GUID}");
+        
         var shop = new DeliveryShopBuilder(app)
             .WithShopName("Herbert's Curiosities")
             .WithShopDescription("Boutique's picks and exotic items")
