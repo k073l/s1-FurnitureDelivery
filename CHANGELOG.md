@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.7.0
+- Added multiplayer compatibility
 ## 1.6.3
 - Compatibility with mods that use DeliveryApp as a foundation for their custom apps like [MoreRealisticSleeping](https://thunderstore.io/c/schedule-i/p/KampfBallerina/MoreRealisticSleeping/) and [MoreRealisticLaundering](https://thunderstore.io/c/schedule-i/p/KampfBallerina/MoreRealisticLaundering/)
 - Updated guns from [More Guns](https://thunderstore.io/c/schedule-i/p/Universal/MoreGuns/) guns from 1.2.1
