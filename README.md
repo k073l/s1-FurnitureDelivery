@@ -14,6 +14,8 @@ Adds ordering furniture in deliveries.
 
 **Note:** Might cause issues with other Delivery mods. Make sure you have a backup if you use those.
 
+**Another note:** I don't recommend saving your game with pending deliveries - in transit or arrived. This is especially true for Herbert's and Armory, as their cars are created when the game loads (and their deliveries might disappear on load). Be sure to unload their deliveries before saving.
+
 ### Mod compatibility
 - [More Guns](https://thunderstore.io/c/schedule-i/p/Universal/MoreGuns/) - Adds AK47 and ammo to Armory delivery service.
 - [Toileportation](https://thunderstore.io/c/schedule-i/p/weedeej/Toileportation/) - Adds Golden Toilet to Herbert's Curiosities delivery service.

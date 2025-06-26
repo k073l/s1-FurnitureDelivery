@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.7.1
+- Fixed saved deliveries from Dan or Oscar disappearing on load
+- Added a notice about saving with pending deliveries
 ## 1.7.0
 - Added multiplayer compatibility
 ## 1.6.3

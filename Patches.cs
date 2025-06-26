@@ -211,3 +211,35 @@ public static class VehicleCameraPatch
                PlayerSingleton<PlayerCamera>.Instance != null;
     }
 }
+
+[HarmonyPatch(typeof(DeliveryVehicle), "Deactivate")]
+public static class DeliveryVehicleDeactivatePatch
+{
+    public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-VehicleDeactivate");
+    public static bool Prefix(DeliveryVehicle __instance)
+    {
+        if (__instance.Vehicle == null) return true;
+        if (__instance.ActiveDelivery?.Status == EDeliveryStatus.Completed) return true;
+        var name = "";
+        if (__instance.Vehicle.name.Contains("Dan"))
+            name = "Dan";
+        else if (__instance.Vehicle.name.Contains("Oscar"))
+            name = "Oscar";
+
+        if (!string.IsNullOrEmpty(name))
+        {
+            var shops = InitializedShopsCache.GetShops(name);
+            foreach (var shop in shops)
+            {
+                var active = NetworkSingleton<DeliveryManager>.Instance.GetActiveShopDelivery(shop) != null;
+                if (active)
+                {
+                    Logger.Warning($"{name} is currently delivering an order, not deactivating the vehicle");
+                    return false; // Prevent deactivation if the shop is delivering
+                }
+            }
+        }
+
+        return true;
+    }
+}
