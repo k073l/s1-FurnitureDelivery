@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.7.2
+- Added Shotgun and ammo from Cartel update (0.4.0) to Armory delivery service
 ## 1.7.1
 - Fixed saved deliveries from Dan or Oscar disappearing on load
 - Added a notice about saving with pending deliveries

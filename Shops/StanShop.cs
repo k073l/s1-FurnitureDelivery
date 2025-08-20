@@ -30,6 +30,8 @@ public class StanShop
         { "revolvercylinder", 10f },
         { "m1911", 2500f },
         { "m1911mag", 20f },
+        { "pumpshotgun", 7500f },
+        { "shotgunshell", 5f},
         { "ak47", 15000f}, // moreguns
         { "ak47mag", 1000f}, // moreguns
         { "minigun", 75000f}, // moreguns
