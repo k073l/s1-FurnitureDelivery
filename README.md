@@ -91,3 +91,5 @@ Weapons and ammo, delivered from the warehouse.
 - Revolver Cylinder
 - M1911
 - M1911 Magazine
+- Shotgun
+- Shotgun Shells
