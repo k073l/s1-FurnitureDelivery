@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.7.3
+- Fix nullrefs appearing when running with More Guns mod
 ## 1.7.2
 - Added Shotgun and ammo from Cartel update (0.4.0) to Armory delivery service
 ## 1.7.1

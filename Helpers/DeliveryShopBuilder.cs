@@ -222,8 +222,10 @@ public class DeliveryShopBuilder
         }
 
         GameObject shopObj = new GameObject($"ShopInterface_{_shopName}");
+        shopObj.SetActive(false);
         var newInterface = shopObj.AddComponent<ShopInterface>();
 
+        newInterface.gameObject.name = _shopName;
         newInterface.ShopName = _shopName;
         
 #if !MONO
@@ -256,9 +258,27 @@ public class DeliveryShopBuilder
         container.transform.SetParent(cart.transform);
         cart.CartEntryContainer = container.AddComponent<RectTransform>();
         
-        
         Logger.Debug($"Cart for shop {_shopName} is {cart.name} and is {cart.gameObject.activeSelf}");
         newInterface.Cart = cart;
+        
+        var templateShop = ShopInterface.AllShops.AsEnumerable().ElementAt(0);
+        
+        newInterface.ListingUIPrefab = templateShop.ListingUIPrefab;
+        newInterface.ListingContainer = templateShop.ListingContainer;
+        newInterface.ListingScrollRect = templateShop.ListingScrollRect;
+        newInterface.categoryButtons = templateShop.categoryButtons;
+        newInterface.StoreNameLabel = templateShop.StoreNameLabel;
+        newInterface.AmountSelector = templateShop.AmountSelector;
+        
+        if (templateShop.ListingUIPrefab != null)
+        {
+            newInterface.ListingUIPrefab = templateShop.ListingUIPrefab;
+        }
+        else
+        {
+            Logger.Warning("ListingUIPrefab missing, may result in nullrefs");
+        }
+
         
         ShopInterface.AllShops.Add(newInterface);
 
@@ -319,6 +339,7 @@ public class DeliveryShopBuilder
 
         ShopPositionRegistry.ShopPositions[shopInstance.gameObject.name] = _insertPosition;
 
+        shopObj.SetActive(true);
         shopInstance.gameObject.SetActive(true);
         return shopInstance;
     }
