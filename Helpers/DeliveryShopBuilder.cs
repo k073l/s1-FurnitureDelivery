@@ -263,22 +263,27 @@ public class DeliveryShopBuilder
         
         var templateShop = ShopInterface.AllShops.AsEnumerable().ElementAt(0);
         
-        newInterface.ListingUIPrefab = templateShop.ListingUIPrefab;
-        newInterface.ListingContainer = templateShop.ListingContainer;
-        newInterface.ListingScrollRect = templateShop.ListingScrollRect;
-        newInterface.categoryButtons = templateShop.categoryButtons;
-        newInterface.StoreNameLabel = templateShop.StoreNameLabel;
-        newInterface.AmountSelector = templateShop.AmountSelector;
+        newInterface.ListingUIPrefab = Object.Instantiate(templateShop.ListingUIPrefab);
+        newInterface.ListingContainer = Object.Instantiate(templateShop.ListingContainer);
+        newInterface.ListingScrollRect = Object.Instantiate(templateShop.ListingScrollRect);
+        newInterface.ListingScrollRect.content = newInterface.ListingContainer;
+        newInterface.StoreNameLabel = Object.Instantiate(templateShop.StoreNameLabel);
+        newInterface.AmountSelector = Object.Instantiate(templateShop.AmountSelector);
+        
         
         if (templateShop.ListingUIPrefab != null)
         {
             newInterface.ListingUIPrefab = templateShop.ListingUIPrefab;
+            newInterface.ListingUIPrefab.gameObject.SetActive(false);
         }
         else
         {
             Logger.Warning("ListingUIPrefab missing, may result in nullrefs");
         }
-
+        newInterface.ListingContainer.gameObject.SetActive(false);
+        newInterface.ListingScrollRect.gameObject.SetActive(false);
+        newInterface.StoreNameLabel.gameObject.SetActive(false);
+        newInterface.AmountSelector.gameObject.SetActive(false);
         
         ShopInterface.AllShops.Add(newInterface);
 

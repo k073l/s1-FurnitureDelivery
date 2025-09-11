@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.7.4
+- Fix for delivery shops' items appearing in Thrify Threads
 ## 1.7.3
 - Fix nullrefs appearing when running with More Guns mod
 ## 1.7.2
