@@ -20,6 +20,12 @@ using Il2CppScheduleOne.Delivery;
 
 [assembly: MelonOptionalDependencies("MoreGuns", "Toileportation", "UpgradedTrashCans", "DeliveryApp++")]
 
+#if MONO
+[assembly: MelonPlatformDomain(MelonPlatformDomainAttribute.CompatibleDomains.MONO)]
+#else
+[assembly: MelonPlatformDomain(MelonPlatformDomainAttribute.CompatibleDomains.IL2CPP)]
+#endif
+
 namespace FurnitureDelivery;
 
 public static class BuildInfo
@@ -27,7 +33,7 @@ public static class BuildInfo
     public const string Name = "FurnitureDelivery";
     public const string Description = "Adds a custom delivery shops for furniture items";
     public const string Author = "k073l";
-    public const string Version = "1.7.4";
+    public const string Version = "1.7.5";
 }
 
 public class FurnitureDelivery : MelonMod

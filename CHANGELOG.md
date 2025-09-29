@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.7.5
+- Fix for nullref ListingUI in Player.log on the latest patch (0.4.0f8)
 ## 1.7.4
 - Fix for delivery shops' items appearing in Thrify Threads
 ## 1.7.3

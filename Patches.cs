@@ -10,12 +10,14 @@ using ScheduleOne.Delivery;
 using ScheduleOne.DevUtilities;
 using ScheduleOne.PlayerScripts;
 using ScheduleOne.UI.Phone.Delivery;
+using ScheduleOne.UI.Shop;
 using ScheduleOne.Vehicles;
 #else
 using Il2CppScheduleOne.Delivery;
 using Il2CppScheduleOne.DevUtilities;
 using Il2CppScheduleOne.PlayerScripts;
 using Il2CppScheduleOne.UI.Phone.Delivery;
+using Il2CppScheduleOne.UI.Shop;
 using Il2CppScheduleOne.Vehicles;
 #endif
 
@@ -240,6 +242,34 @@ public static class DeliveryVehicleDeactivatePatch
             }
         }
 
+        return true;
+    }
+}
+
+[HarmonyPatch(typeof(ListingUI))]
+public static class ListingUICanAddToCartPatch
+{
+    [HarmonyPatch(nameof(ListingUI.CanAddToCart))]
+    [HarmonyPrefix]
+    public static bool PrefixCanAddToCart(ListingUI __instance, ref bool __result)
+    {
+        if (__instance.Listing == null)
+        {
+            __result = false;
+            return false;
+        }
+
+        return true;
+    }
+    
+    [HarmonyPatch(nameof(ListingUI.UpdateButtons))]
+    [HarmonyPrefix]
+    public static bool PrefixUpdateButtons(ListingUI __instance)
+    {
+        if (__instance.BuyButton == null) return false;
+        if (__instance.BuyButton.isActiveAndEnabled == false) return false;
+        if (__instance.DropdownButton == null) return false;
+        if (__instance.DropdownButton.isActiveAndEnabled == false) return false;
         return true;
     }
 }
