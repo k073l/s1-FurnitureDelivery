@@ -32,6 +32,7 @@ Other tested:
 - Coffee Table
 - Metal Square Table
 - Wooden Square Table
+- Plastic Table
 - Toilet
 - Trashcan
 - Bed
@@ -81,6 +82,7 @@ Some of the items offered by the boutique, alongside exclusive, not-available-an
 - Filing Cabinet
 - Small Trashcan
 - Dumpster
+- Garbage Throne
 
 #### Armory
 Weapons and ammo, delivered from the warehouse.
