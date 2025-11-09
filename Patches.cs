@@ -77,6 +77,11 @@ class InitializedShopsCache
         if (!shops.ContainsKey(name))
         {
             var app = PlayerSingleton<DeliveryApp>.Instance;
+            if (app == null)
+            {
+                Melon<FurnitureDelivery>.Logger.Debug("DeliveryApp is null, cannot get shops");
+                return null;
+            }
             var list = DeliveryShopBuilder.GetInitializedShops(app, out _);
             foreach (var shop in list)
                 shops.TryAdd(shop.gameObject.name, shop);
@@ -218,26 +223,45 @@ public static class VehicleCameraPatch
 public static class DeliveryVehicleDeactivatePatch
 {
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-VehicleDeactivate");
+
     public static bool Prefix(DeliveryVehicle __instance)
     {
+        if (__instance == null) return true;
         if (__instance.Vehicle == null) return true;
         if (__instance.ActiveDelivery?.Status == EDeliveryStatus.Completed) return true;
-        var name = "";
-        if (__instance.Vehicle.name.Contains("Dan"))
+
+        var vehicleName = __instance.Vehicle?.name;
+        if (string.IsNullOrEmpty(vehicleName)) return true;
+
+        string name = null;
+        if (vehicleName.Contains("Dan"))
             name = "Dan";
-        else if (__instance.Vehicle.name.Contains("Oscar"))
+        else if (vehicleName.Contains("Oscar"))
             name = "Oscar";
 
         if (!string.IsNullOrEmpty(name))
         {
             var shops = InitializedShopsCache.GetShops(name);
+            if (shops == null)
+            {
+                Logger.Debug($"InitializedShopsCache returned null for {name}");
+                return true;
+            }
+
+            var manager = NetworkSingleton<DeliveryManager>.Instance;
+            if (manager == null)
+            {
+                Logger.Debug("NetworkSingleton<DeliveryManager>.Instance is null");
+                return true;
+            }
+
             foreach (var shop in shops)
             {
-                var active = NetworkSingleton<DeliveryManager>.Instance.GetActiveShopDelivery(shop) != null;
+                var active = manager.GetActiveShopDelivery(shop) != null;
                 if (active)
                 {
                     Logger.Warning($"{name} is currently delivering an order, not deactivating the vehicle");
-                    return false; // Prevent deactivation if the shop is delivering
+                    return false;
                 }
             }
         }

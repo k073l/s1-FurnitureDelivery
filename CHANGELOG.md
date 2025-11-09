@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.6
+- Fix for nullref when loading a save again - load, quit to main menu, load again
+- Main scene cleanup
+- Added Plastic Table from 0.4.1 to Dan's Furniture, added Garbage Throne from 0.4.1 to Herbert's Curiosities
 ## 1.7.5
 - Fix for nullref ListingUI in Player.log on the latest patch (0.4.0f8)
 ## 1.7.4

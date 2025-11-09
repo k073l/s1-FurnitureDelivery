@@ -20,6 +20,7 @@ public static class DanShop
         "coffeetable",
         "metalsquaretable",
         "woodsquaretable",
+        "plastictable",
         "toilet",
         "trashcan",
         "trash_bin", // UpgradedTrashCans

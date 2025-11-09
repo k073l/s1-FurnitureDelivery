@@ -36,6 +36,7 @@ public class HerbertShop
         "filingcabinet",
         "smalltrashcan",
         "dumpster",
+        "garbagethrone",
     };
 
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-HerbertShop");

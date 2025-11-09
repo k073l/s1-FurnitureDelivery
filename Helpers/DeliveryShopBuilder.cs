@@ -38,17 +38,23 @@ public class DeliveryShopBuilder
 
     private readonly DeliveryShop _deliveryShopTemplate;
 
-    public static readonly Dictionary<LandVehicle, DeliveryVehicle> DeliveryVehicleRegistry = new();
+    private static GameObject _fdRoot = new GameObject("FurnitureDeliveryRoot");
+
+    public static Dictionary<LandVehicle, DeliveryVehicle> DeliveryVehicleRegistry = new();
 
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-DeliveryShopBuilder");
 
 
     public DeliveryShopBuilder(DeliveryApp appInstance)
     {
-        _deliveryShopTemplate = appInstance.GetComponentsInChildren<DeliveryShop>(true).FirstOrDefault();
+        _deliveryShopTemplate = appInstance.GetComponentsInChildren<DeliveryShop>(true).FirstOrDefault(ds => ds != null);
         if (_deliveryShopTemplate == null)
         {
             Logger.Error("No DeliveryShop template found in app.");
+        }
+        if (_fdRoot == null)
+        {
+            _fdRoot = new GameObject("FurnitureDeliveryRoot");
         }
     }
 
@@ -122,10 +128,17 @@ public class DeliveryShopBuilder
 
         if (DeliveryVehicleRegistry.TryGetValue(vehicle, out var cached) && cached != null)
         {
+            Logger.Debug("Using cached DeliveryVehicle for " + vehicle.name);
+            if (cached.Vehicle != vehicle)
+            {
+                Logger.Warning($"Cached DeliveryVehicle's Vehicle does not match for {vehicle.name}. Updating reference.");
+                cached.Vehicle = vehicle;
+            }
             return cached;
         }
 
         GameObject vehicleObject = new GameObject($"DeliveryVehicle_{vehicle.name}");
+        vehicleObject.transform.SetParent(_fdRoot.transform);
         var deliveryVehicle = vehicleObject.AddComponent<DeliveryVehicle>();
         deliveryVehicle.Vehicle = vehicle;
         deliveryVehicle.GUID = vehicle.GUID.ToString();
@@ -187,6 +200,7 @@ public class DeliveryShopBuilder
     CartEntry CreateCartEntryPrefab()
     {
         var go = new GameObject("CartEntry");
+        go.transform.SetParent(_fdRoot.transform);
         var cartEntry = go.AddComponent<CartEntry>();
         
         var nameGO = new GameObject("NameLabel");
@@ -222,6 +236,7 @@ public class DeliveryShopBuilder
         }
 
         GameObject shopObj = new GameObject($"ShopInterface_{_shopName}");
+        shopObj.transform.SetParent(_fdRoot.transform);
         shopObj.SetActive(false);
         var newInterface = shopObj.AddComponent<ShopInterface>();
 
@@ -261,36 +276,49 @@ public class DeliveryShopBuilder
         Logger.Debug($"Cart for shop {_shopName} is {cart.name} and is {cart.gameObject.activeSelf}");
         newInterface.Cart = cart;
         
-        var templateShop = ShopInterface.AllShops.AsEnumerable().ElementAt(0);
-        
-        newInterface.ListingUIPrefab = Object.Instantiate(templateShop.ListingUIPrefab);
-        newInterface.ListingContainer = Object.Instantiate(templateShop.ListingContainer);
-        newInterface.ListingScrollRect = Object.Instantiate(templateShop.ListingScrollRect);
-        newInterface.ListingScrollRect.content = newInterface.ListingContainer;
-        newInterface.StoreNameLabel = Object.Instantiate(templateShop.StoreNameLabel);
-        newInterface.AmountSelector = Object.Instantiate(templateShop.AmountSelector);
-        
-        
-        if (templateShop.ListingUIPrefab != null)
+        var templateShop = ShopInterface.AllShops.AsEnumerable().FirstOrDefault(shop => shop != null);
+        Logger.Debug($"Template shop is {(templateShop == null ? "null" : templateShop.ShopName)}");
+        if (templateShop != null)
         {
-            newInterface.ListingUIPrefab = templateShop.ListingUIPrefab;
-            newInterface.ListingUIPrefab.gameObject.SetActive(false);
+            Logger.Debug("Instantiating UI elements from template shop");
+            newInterface.ListingUIPrefab = Object.Instantiate(templateShop.ListingUIPrefab, _fdRoot.transform);
+            newInterface.ListingContainer = Object.Instantiate(templateShop.ListingContainer, _fdRoot.transform);
+            newInterface.ListingScrollRect = Object.Instantiate(templateShop.ListingScrollRect, _fdRoot.transform);
+            newInterface.ListingScrollRect.content = newInterface.ListingContainer;
+            newInterface.StoreNameLabel = Object.Instantiate(templateShop.StoreNameLabel, _fdRoot.transform);
+            newInterface.AmountSelector = Object.Instantiate(templateShop.AmountSelector, _fdRoot.transform);
+            Logger.Debug("UI elements instantiated");
+        
+            if (templateShop.ListingUIPrefab != null)
+            {
+                newInterface.ListingUIPrefab = templateShop.ListingUIPrefab;
+                newInterface.ListingUIPrefab.gameObject.SetActive(false);
+            }
+            else
+            {
+                Logger.Warning("ListingUIPrefab missing, may result in nullrefs");
+            }
+            newInterface.ListingContainer.gameObject.SetActive(false);
+            newInterface.ListingScrollRect.gameObject.SetActive(false);
+            newInterface.StoreNameLabel.gameObject.SetActive(false);
+            newInterface.AmountSelector.gameObject.SetActive(false);
         }
         else
-        {
-            Logger.Warning("ListingUIPrefab missing, may result in nullrefs");
-        }
-        newInterface.ListingContainer.gameObject.SetActive(false);
-        newInterface.ListingScrollRect.gameObject.SetActive(false);
-        newInterface.StoreNameLabel.gameObject.SetActive(false);
-        newInterface.AmountSelector.gameObject.SetActive(false);
+            Logger.Warning("Template shop is null, cannot instantiate UI elements");
         
+        shopObj.SetActive(true);
+#if MONO
+        ShopInterface.AllShops.RemoveAll(si => si == null);
+#else
+        ShopInterface.AllShops.RemoveAll((Il2CppSystem.Predicate<ShopInterface>)(si => si == null));
+#endif
         ShopInterface.AllShops.Add(newInterface);
 
+        Logger.Debug($"Instantiating DeliveryShop from template {(_deliveryShopTemplate == null ? "null" : _deliveryShopTemplate.name)}");
         DeliveryShop shopInstance =
             Object.Instantiate(_deliveryShopTemplate, _deliveryShopTemplate.transform.parent);
         shopInstance.MatchingShopInterfaceName = _shopName;
-        shopInstance.MatchingShop = newInterface;
+        shopInstance.MatchingShop = newInterface != null ? newInterface : ShopInterface.AllShops.AsEnumerable().LastOrDefault(si => si != null && si.ShopName.Contains(_shopName));
         shopInstance.DeliveryFee = _deliveryFee;
         shopInstance.AvailableByDefault = _availableByDefault;
         shopInstance.gameObject.name = $"DeliveryShop_{_shopName}";
@@ -344,8 +372,8 @@ public class DeliveryShopBuilder
 
         ShopPositionRegistry.ShopPositions[shopInstance.gameObject.name] = _insertPosition;
 
-        shopObj.SetActive(true);
         shopInstance.gameObject.SetActive(true);
+        Logger.Debug($"Built delivery shop: {shopInstance.name}, {shopInstance.gameObject.name}");
         return shopInstance;
     }
 
@@ -355,7 +383,7 @@ public class DeliveryShopBuilder
 
         if (contentT == null)
         {
-            Logger.Error("Could not find 'Container/Scroll View/Viewport/Content' under DeliveryApp");
+            Logger.Debug("Could not find 'Container/Scroll View/Viewport/Content' under DeliveryApp");
             return null;
         }
 
@@ -376,7 +404,7 @@ public class DeliveryShopBuilder
         if (ShopPositionRegistry.ShopPositions.TryGetValue(shop.gameObject.name, out int position))
         {
             insertPosition = position;
-            Logger.Debug($"Found position {insertPosition} for shop {shop.gameObject.name}");
+            // Logger.Debug($"Found position {insertPosition} for shop {shop.gameObject.name}");
         }
 
         if (insertPosition < 0)
@@ -391,12 +419,12 @@ public class DeliveryShopBuilder
         // Insert the shop at the specified position
         if (insertPosition < app.deliveryShops.Count)
         {
-            Logger.Debug($"Inserting shop at position {insertPosition}");
+            // Logger.Debug($"Inserting shop at position {insertPosition}");
             app.deliveryShops.Insert(insertPosition, shop);
         }
         else
         {
-            Logger.Debug($"Adding shop to end at position {insertPosition}");
+            // Logger.Debug($"Adding shop to end at position {insertPosition}");
             app.deliveryShops.Add(shop);
         }
 
@@ -409,7 +437,7 @@ public class DeliveryShopBuilder
     private static void FixShopHierarchy(DeliveryApp app)
     {
         var shopComponents = GetInitializedShops(app, out var content);
-        Logger.Debug($"Found {shopComponents.Count} shop components in UI hierarchy");
+        // Logger.Debug($"Found {shopComponents.Count} shop components in UI hierarchy");
 
         for (int i = 0; i < app.deliveryShops.Count; i++)
         {
@@ -419,7 +447,7 @@ public class DeliveryShopBuilder
 
             shop.transform.SetParent(content, false);
             shop.transform.SetSiblingIndex(i);
-            Logger.Debug($"Set {shop.gameObject.name} to sibling index {i}");
+            // Logger.Debug($"Set {shop.gameObject.name} to sibling index {i}");
         }
     }
 }

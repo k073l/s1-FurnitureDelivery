@@ -33,7 +33,7 @@ public static class BuildInfo
     public const string Name = "FurnitureDelivery";
     public const string Description = "Adds a custom delivery shops for furniture items";
     public const string Author = "k073l";
-    public const string Version = "1.7.5";
+    public const string Version = "1.7.6";
 }
 
 public class FurnitureDelivery : MelonMod
@@ -88,6 +88,7 @@ public class FurnitureDelivery : MelonMod
         if (sceneName == "Main")
         {
             DeliveryAppAwakePatch.AddedShops = false; // reset the flag to allow adding shops again if exited to menu
+            InitializedShopsCache.shops = new();
             if (RegisteredMelons.Any(m => m.Info.Name.Contains("DeliveryApp++")))
             {
                 MelonLogger.Msg("DeliveryAppPlusPlus detected. Applying patches");
