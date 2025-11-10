@@ -25,7 +25,7 @@ Adds ordering furniture in deliveries.
 All of these mods are optional and not required for the mod to work.
 
 Other tested:
-- [UI Dark Mode](https://www.nexusmods.com/schedule1/mods/554) - `System.NullReferenceException` will be thrown when adding delivery shops, but the mod will work fine otherwise.
+- [UI Dark Mode](https://www.nexusmods.com/schedule1/mods/554) - used to throw NREs, compatibility added by [Cubandsweety](https://next.nexusmods.com/profile/Cubandsweety) in 1.0.4 of UI Dark Mode. Thanks!
 
 ### Delivery services added
 #### Dan's Furniture
