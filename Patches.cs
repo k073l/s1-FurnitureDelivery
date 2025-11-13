@@ -290,10 +290,12 @@ public static class ListingUICanAddToCartPatch
     [HarmonyPrefix]
     public static bool PrefixUpdateButtons(ListingUI __instance)
     {
+        if (__instance == null) return false;
         if (__instance.BuyButton == null) return false;
         if (__instance.BuyButton.isActiveAndEnabled == false) return false;
         if (__instance.DropdownButton == null) return false;
         if (__instance.DropdownButton.isActiveAndEnabled == false) return false;
+        if (__instance.Listing == null) return false;
         return true;
     }
 }

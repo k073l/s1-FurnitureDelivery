@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.7.7
+- Fix nullref in the Prologue
 ## 1.7.6
 - Fix for nullref when loading a save again - load, quit to main menu, load again
 - Main scene cleanup
