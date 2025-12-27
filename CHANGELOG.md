@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.7.8
+- Added Mushroom Bed, Mushroom Spawn Station to Oscar's Equipment and AC Unit to Dan's Furniture (from 0.4.2 Shrooms Update)
+- Added compatibility with [Metal Storage](https://github.com/HazDS/MetalStorage) - adds Metal Storage Racks to Dan's Furniture
 ## 1.7.7
 - Fix nullref in the Prologue
 ## 1.7.6

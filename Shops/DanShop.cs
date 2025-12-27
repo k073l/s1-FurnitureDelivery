@@ -28,6 +28,7 @@ public static class DanShop
         "bed",
         "locker",
         "TV",
+        "acunit",
         "floorlamp",
         "growtent",
         "plasticpot",
@@ -39,6 +40,9 @@ public static class DanShop
         "largestoragerack",
         "mediumstoragerack",
         "smallstoragerack",
+        "metallargestoragerack", // MetalStorage
+        "metalmediumstoragerack", // MetalStorage
+        "metalsmallstoragerack", // MetalStorage
     };
 
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-DanShop");

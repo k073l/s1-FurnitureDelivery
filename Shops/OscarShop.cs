@@ -24,6 +24,8 @@ public static class OscarShop
         "packagingstationmk2",
         "mixingstation",
         "mixingstationmk2",
+        "mushroomspawnstation",
+        "mushroombed",
         "dryingrack",
         "chemistrystation",
         "laboven",
