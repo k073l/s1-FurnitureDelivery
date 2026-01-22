@@ -18,7 +18,7 @@ using Il2CppScheduleOne.Delivery;
 [assembly: MelonColor(1, 255, 215, 0)]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
-[assembly: MelonOptionalDependencies("MoreGuns", "Toileportation", "UpgradedTrashCans", "DeliveryApp++")]
+[assembly: MelonOptionalDependencies("MoreGuns", "Toileportation", "UpgradedTrashCans", "DeliveryApp++", "MetalStorage", "BigSprinklerLogic")]
 
 #if MONO
 [assembly: MelonPlatformDomain(MelonPlatformDomainAttribute.CompatibleDomains.MONO)]
@@ -33,7 +33,7 @@ public static class BuildInfo
     public const string Name = "FurnitureDelivery";
     public const string Description = "Adds a custom delivery shops for furniture items";
     public const string Author = "k073l";
-    public const string Version = "1.7.8";
+    public const string Version = "1.7.9";
 }
 
 public class FurnitureDelivery : MelonMod
@@ -58,6 +58,16 @@ public class FurnitureDelivery : MelonMod
         if (RegisteredMelons.Any(m => m.Info.Name.Contains("UpgradedTrashCans")))
         {
             MelonLogger.Msg("UpgradedTrashCans detected. Adding trash bins to Dan's shop");
+        }
+
+        if (RegisteredMelons.Any(m => m.Info.Name.Contains("MetalStorage")))
+        {
+            MelonLogger.Msg("MetalStorage detected. Adding metal storage racks to Dan's shop");
+        }
+
+        if (RegisteredMelons.Any(m => m.Info.Name.Contains("BigSprinklerLogic")))
+        {
+            MelonLogger.Msg("BigSprinklerLogic detected. Adding big sprinkler to Dan's shop");
         }
     }
 

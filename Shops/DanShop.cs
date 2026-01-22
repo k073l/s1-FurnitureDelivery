@@ -43,6 +43,10 @@ public static class DanShop
         "metallargestoragerack", // MetalStorage
         "metalmediumstoragerack", // MetalStorage
         "metalsmallstoragerack", // MetalStorage
+        "smallstoragecloset",
+        "mediumstoragecloset",
+        "largestoragecloset",
+        "hugestoragecloset",
     };
 
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-DanShop");
@@ -75,6 +79,22 @@ public static class DanShop
         {
             Logger.Debug($"Adding item {item.name} to Dan's shop");
             shop.AddListing(item);
+        }
+
+        if (FurnitureDelivery.RegisteredMelons.Any(m => m.Info.Name.Contains("BigSprinklerLogic")))
+        {
+            var bigSprinkler = Utils.GetAllStorableItemDefinitions()
+                .Where(item => item.ID == "bigsprinkler")
+                .FirstOrDefault(item => item != null);
+            if (bigSprinkler != null)
+            {
+                Logger.Debug("Adding Big Sprinkler to Dan's shop");
+                shop.AddListing(bigSprinkler);
+            }
+            else
+            {
+                Logger.Warning("Big Sprinkler item definition not found");
+            }
         }
 
         var builtShop = shop.Build();

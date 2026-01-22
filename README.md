@@ -20,7 +20,8 @@ Adds ordering furniture in deliveries.
 - [More Guns](https://thunderstore.io/c/schedule-i/p/Universal/MoreGuns/) - Adds AK47 and ammo to Armory delivery service.
 - [Toileportation](https://thunderstore.io/c/schedule-i/p/weedeej/Toileportation/) - Adds Golden Toilet to Herbert's Curiosities delivery service.
 - [UpgradedTrashCans](https://thunderstore.io/c/schedule-i/p/j0ckinjz/UpgradedTrashCans_Mono/) - Adds Trash Bin and Trash Compactor to Dan's Furniture delivery service.
-- [Metal Storage](https://github.com/HazDS/MetalStorage) - Adds Metal Storage Racks to Dan's Furniture delivery service.
+- [Metal Storage](https://thunderstore.io/c/schedule-i/p/HazDS/MetalStorage/) - Adds Metal Storage Racks to Dan's Furniture delivery service.
+- [Big Sprinkler Logic](https://thunderstore.io/c/schedule-i/p/k0Mods/BigSprinklerLogic/) - Adds Big Sprinkler to Dan's Furniture delivery service.
 - [DeliveryApp Improvements](https://www.nexusmods.com/schedule1/mods/521) - Delivery services added by FurnitureDelivery can be automated using this mod.
 
 All of these mods are optional and not required for the mod to work.
@@ -51,6 +52,10 @@ Other tested:
 - Large Storage Rack
 - Medium Storage Rack
 - Small Storage Rack
+- Small Storage Closet
+- Medium Storage Closet
+- Large Storage Closet
+- Huge Storage Closet
 
 #### Oscar's Equipment
 Will appear in the deliveries app alongside Oscar's supply store.
