@@ -33,7 +33,7 @@ public static class BuildInfo
     public const string Name = "FurnitureDelivery";
     public const string Description = "Adds a custom delivery shops for furniture items";
     public const string Author = "k073l";
-    public const string Version = "1.7.9";
+    public const string Version = "1.8.0";
 }
 
 public class FurnitureDelivery : MelonMod
@@ -87,8 +87,7 @@ public class FurnitureDelivery : MelonMod
                 // cleanup
                 if (DeliveryManager.Instance != null)
                 {
-                    DeliveryManager.Instance.onDeliveryCreated.RemoveListener(
-                        (UnityAction<DeliveryInstance>)ToileportationInterop.OnDeliveryCreated);
+                    DeliveryManager.Instance.onDeliveryCreated += (Action<DeliveryInstance>)(di => ToileportationInterop.OnDeliveryCreated(di));
                 }
 
                 ToileportationInterop.GoldenToiletListing = null;
@@ -110,8 +109,7 @@ public class FurnitureDelivery : MelonMod
     private static IEnumerator OnDeliveryManagerReady()
     {
         MelonLogger.Debug($"Delivery manager ready");
-        DeliveryManager.Instance.onDeliveryCreated.AddListener(
-            (UnityAction<DeliveryInstance>)ToileportationInterop.OnDeliveryCreated);
+        DeliveryManager.Instance.onDeliveryCreated += (Action<DeliveryInstance>)(di => ToileportationInterop.OnDeliveryCreated(di));
         yield break;
     }
 }

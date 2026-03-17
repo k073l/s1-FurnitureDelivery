@@ -1,4 +1,5 @@
 ﻿using FurnitureDelivery.Interop;
+using HarmonyLib;
 using MelonLoader;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,6 +9,7 @@ using Object = UnityEngine.Object;
 #if MONO
 using TMPro;
 using ScheduleOne.Delivery;
+using ScheduleOne.Money;
 using ScheduleOne.UI.Phone.Delivery;
 using ScheduleOne.UI.Shop;
 using ScheduleOne.ItemFramework;
@@ -15,6 +17,7 @@ using ScheduleOne.Vehicles;
 #else
 using Il2CppTMPro;
 using Il2CppScheduleOne.Delivery;
+using Il2CppScheduleOne.Money;
 using Il2CppScheduleOne.UI.Phone.Delivery;
 using Il2CppScheduleOne.UI.Shop;
 using Il2CppScheduleOne.ItemFramework;
@@ -43,6 +46,8 @@ public class DeliveryShopBuilder
     public static Dictionary<LandVehicle, DeliveryVehicle> DeliveryVehicleRegistry = new();
 
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-DeliveryShopBuilder");
+
+    internal static Dictionary<DeliveryShop, float> DeliveryFeeRegistry = new();
 
 
     public DeliveryShopBuilder(DeliveryApp appInstance)
@@ -261,9 +266,9 @@ public class DeliveryShopBuilder
         cart.TotalText = cart.gameObject.AddComponent<TextMeshProUGUI>();
         cart.WarningText = cart.gameObject.AddComponent<TextMeshProUGUI>();
         cart.ProblemText = cart.gameObject.AddComponent<TextMeshProUGUI>();
-        cart.ViewCartText = cart.gameObject.AddComponent<TextMeshProUGUI>();
+        // cart.ViewCartText = cart.gameObject.AddComponent<TextMeshProUGUI>();
         
-        cart.BuyButton = cart.gameObject.AddComponent<Button>();
+        // cart.BuyButton = cart.gameObject.AddComponent<Button>();
         cart.LoadVehicleToggle = cart.gameObject.AddComponent<Toggle>();
         cart.CartArea = cart.gameObject.AddComponent<Image>();
         
@@ -319,7 +324,7 @@ public class DeliveryShopBuilder
             Object.Instantiate(_deliveryShopTemplate, _deliveryShopTemplate.transform.parent);
         shopInstance.MatchingShopInterfaceName = _shopName;
         shopInstance.MatchingShop = newInterface != null ? newInterface : ShopInterface.AllShops.AsEnumerable().LastOrDefault(si => si != null && si.ShopName.Contains(_shopName));
-        shopInstance.DeliveryFee = _deliveryFee;
+        DeliveryFeeRegistry.TryAdd(shopInstance, _deliveryFee);
         shopInstance.AvailableByDefault = _availableByDefault;
         shopInstance.gameObject.name = $"DeliveryShop_{_shopName}";
 
@@ -455,4 +460,33 @@ public class DeliveryShopBuilder
 public static class ShopPositionRegistry
 {
     public static Dictionary<string, int> ShopPositions = new Dictionary<string, int>();
+}
+
+[HarmonyPatch(typeof(DeliveryShop))]
+internal class DeliveryShopPatches
+{
+    [HarmonyPatch(nameof(DeliveryShop.GetOrderTotal))]
+    [HarmonyPostfix]
+    public static void AddCustomFee(DeliveryShop __instance, ref float __result)
+    {
+        if (DeliveryShopBuilder.DeliveryFeeRegistry.TryGetValue(__instance, out var fee))
+            __result = __instance.GetCartCost() + fee;
+    }
+}
+
+// I'd postfix DeliveryShop.RefreshShop, but IL2CPP inlined it
+[HarmonyPatch(typeof(DeliveryApp), nameof(DeliveryApp.SetOpen))]
+internal class DeliveryApp_SetOpen_UpdateFee
+{
+    public static void Postfix(DeliveryApp __instance, bool open)
+    {
+        if (__instance == null) return;
+        if (!open) return;
+        foreach (var shop in __instance.deliveryShops)
+        {
+            if (shop?.DeliveryFeeLabel == null) continue;
+            if (!DeliveryShopBuilder.DeliveryFeeRegistry.TryGetValue(shop, out var fee)) continue;
+            shop.DeliveryFeeLabel.text = MoneyManager.FormatAmount(fee);
+        }
+    }
 }

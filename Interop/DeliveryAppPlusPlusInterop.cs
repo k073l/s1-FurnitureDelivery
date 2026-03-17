@@ -30,13 +30,14 @@ static class CartPatches
 	{
 		return __instance.ProblemText != null;
 	}
-	
-	[HarmonyPatch("UpdateViewCartText")]
-	[HarmonyPrefix]
-	private static bool UpdateViewCartText(Cart __instance)
-	{
-		return __instance.ViewCartText != null;
-	}
+
+	// Removed due to changes in 0.4.4f6
+	// [HarmonyPatch("UpdateViewCartText")]
+	// [HarmonyPrefix]
+	// private static bool UpdateViewCartText(Cart __instance)
+	// {
+	// 	return __instance.ViewCartText != null;
+	// }
 }
 
 public class DeliveryAppPlusPlusInterop

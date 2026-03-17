@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.8.0
+- Fix for Action and removed fields errors on the latest beta patch (0.4.4f6)
 ## 1.7.9
 - Added Storage Closets (Small, Medium, Large, Huge) to Dan's Furniture (from 0.4.3 Storage Update)
 ## 1.7.8

@@ -4,6 +4,7 @@ using FurnitureDelivery;
 using FurnitureDelivery.Helpers;
 using MelonLoader;
 using UnityEngine;
+using BuildInfo = FurnitureDelivery.BuildInfo;
 #if MONO
 using ScheduleOne.Networking;
 using ScheduleOne.Vehicles;
