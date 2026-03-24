@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.8.1
+- Fix for nullrefs thrown during initialization
+- Changed the Armory icon to Stan's mugshot (thanks Wuerfelhusten!)
 ## 1.8.0
 - Fix for Action and removed fields errors on the latest beta patch (0.4.4f6)
 ## 1.7.9

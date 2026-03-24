@@ -68,7 +68,7 @@ public class StanShop
             .WithShopName("Armory")
             .WithShopDescription("Weapons and ammo")
             .WithShopColor(new Color(0.8f, 0f, 0f))
-            .WithShopImage(Utils.FindSprite("Fixer_Mugshot"))
+            .WithShopImage(FurnitureDelivery.StanMugshot)
             .WithDeliveryFee(800f)
             .SetAvailableByDefault(true)
             .WithDeliveryVehicle(DeliveryShopBuilder.GetOrCreateDeliveryVehicle(landVehicle))

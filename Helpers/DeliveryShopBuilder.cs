@@ -130,6 +130,9 @@ public class DeliveryShopBuilder
     public static DeliveryVehicle GetOrCreateDeliveryVehicle(LandVehicle vehicle)
     {
         if (vehicle == null) return null;
+        
+        if (vehicle?.gameObject?.GetComponent<DeliveryVehicle>() != null)
+            return vehicle.gameObject.GetComponent<DeliveryVehicle>();
 
         if (DeliveryVehicleRegistry.TryGetValue(vehicle, out var cached) && cached != null)
         {
@@ -142,7 +145,7 @@ public class DeliveryShopBuilder
             return cached;
         }
 
-        GameObject vehicleObject = new GameObject($"DeliveryVehicle_{vehicle.name}");
+        var vehicleObject = vehicle.gameObject;
         vehicleObject.transform.SetParent(_fdRoot.transform);
         var deliveryVehicle = vehicleObject.AddComponent<DeliveryVehicle>();
         deliveryVehicle.Vehicle = vehicle;

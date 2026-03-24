@@ -23,6 +23,7 @@ Adds ordering furniture in deliveries.
 - [Metal Storage](https://thunderstore.io/c/schedule-i/p/HazDS/MetalStorage/) - Adds Metal Storage Racks to Dan's Furniture delivery service.
 - [Big Sprinkler Logic](https://thunderstore.io/c/schedule-i/p/k0Mods/BigSprinklerLogic/) - Adds Big Sprinkler to Dan's Furniture delivery service.
 - [DeliveryApp Improvements](https://www.nexusmods.com/schedule1/mods/521) - Delivery services added by FurnitureDelivery can be automated using this mod.
+- [Absurdely Better Delivery](https://www.nexusmods.com/schedule1/mods/1418) - Delivery services added by FurnitureDelivery can be automated using this mod. Compatibility by [Wuerfelhusten](https://www.nexusmods.com/profile/Wuerfelhusten/) - thanks!
 
 All of these mods are optional and not required for the mod to work.
 
@@ -104,3 +105,6 @@ Weapons and ammo, delivered from the warehouse.
 - M1911 Magazine
 - Shotgun
 - Shotgun Shells
+
+## Credits:
+[Wuerfelhusten](https://www.nexusmods.com/profile/Wuerfelhusten/) for providing Stan's mugshot. Thanks!

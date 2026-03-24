@@ -3,22 +3,27 @@ using FurnitureDelivery.Helpers;
 using FurnitureDelivery.Interop;
 using HarmonyLib;
 using MelonLoader;
+using UnityEngine;
 
 
 #if MONO
+using Guid = System.Guid;
 using ScheduleOne.Delivery;
 using ScheduleOne.DevUtilities;
 using ScheduleOne.PlayerScripts;
 using ScheduleOne.UI.Phone.Delivery;
 using ScheduleOne.UI.Shop;
 using ScheduleOne.Vehicles;
+using ScheduleOne.Weather;
 #else
+using Guid = Il2CppSystem.Guid;
 using Il2CppScheduleOne.Delivery;
 using Il2CppScheduleOne.DevUtilities;
 using Il2CppScheduleOne.PlayerScripts;
 using Il2CppScheduleOne.UI.Phone.Delivery;
 using Il2CppScheduleOne.UI.Shop;
 using Il2CppScheduleOne.Vehicles;
+using Il2CppScheduleOne.Weather;
 #endif
 
 namespace FurnitureDelivery;
@@ -297,5 +302,76 @@ public static class ListingUICanAddToCartPatch
         if (__instance.DropdownButton.isActiveAndEnabled == false) return false;
         if (__instance.Listing == null) return false;
         return true;
+    }
+}
+
+[HarmonyPatch(typeof(Wheel))]
+internal class WheelPatch
+{
+    [HarmonyPatch(nameof(Wheel.OnWeatherChange))]
+    [HarmonyPrefix]
+    private static bool ExitIfNull(Wheel __instance, WeatherConditions newConditions)
+    {
+        if (__instance?.vehicle == null) return false;
+        if (newConditions?.Rainy == null) return false;
+        return true;
+    }
+}
+
+[HarmonyPatch(typeof(DeliveryVehicle))]
+internal static class DeliveryVehicleAwakePatch
+{
+    [HarmonyPatch(nameof(DeliveryVehicle.Awake))]
+    [HarmonyPrefix]
+    [HarmonyPriority(Priority.First)]
+    private static bool ExitIfNull(DeliveryVehicle __instance)
+    {
+        // skip guid setting if invalid
+        if (Guid.TryParse(__instance.GUID, out var _)) return true;
+        if (__instance.GetComponent<LandVehicle>() == null) return false;
+        __instance.Vehicle = __instance.GetComponent<LandVehicle>();
+        __instance.Deactivate();
+        return false;
+    }
+}
+
+[HarmonyPatch(typeof(ShopInterface))]
+internal static class ShopInterfacePatch
+{
+    [HarmonyPatch(nameof(ShopInterface.Awake))]
+    [HarmonyPrefix]
+    private static bool ExitIfNull(ShopInterface __instance)
+    {
+        if (__instance?.ListingScrollRect == null ||
+            __instance.StoreNameLabel == null ||
+            __instance.ListingContainer == null ||
+            __instance.AmountSelector == null ||
+            __instance.ListingUIPrefab == null ||
+            __instance.listingPanel == null ||
+            __instance.listingPanel == null
+            )
+        {
+            ShopInterface.AllShops.Add(__instance);
+            return false;
+        }
+        return true;
+    }
+
+    [HarmonyPatch(nameof(ShopInterface.RefreshShownItems))]
+    [HarmonyPrefix]
+    private static bool ExitIfUINull(ShopInterface __instance)
+    {
+        if (__instance?.listingUI == null || __instance.DetailPanel == null) return false;
+        return true;
+    }
+
+    [HarmonyPatch(nameof(ShopInterface.Start))]
+    [HarmonyPrefix]
+    private static void AddMissingMembers(ShopInterface __instance)
+    {
+        if (__instance.Canvas == null)
+            __instance.Canvas = __instance.GetComponent<Canvas>() ?? __instance.gameObject.AddComponent<Canvas>();
+        if (__instance.Container == null)
+            __instance.Container = __instance.GetComponent<RectTransform>() ?? __instance.gameObject.AddComponent<RectTransform>();
     }
 }

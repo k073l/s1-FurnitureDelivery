@@ -1,9 +1,9 @@
 using FurnitureDelivery.Helpers;
 using FurnitureDelivery.Interop;
 using System.Collections;
+using System.Reflection;
 using MelonLoader;
 using UnityEngine;
-using UnityEngine.Events;
 
 #if MONO
 using ScheduleOne.Delivery;
@@ -33,12 +33,15 @@ public static class BuildInfo
     public const string Name = "FurnitureDelivery";
     public const string Description = "Adds a custom delivery shops for furniture items";
     public const string Author = "k073l";
-    public const string Version = "1.8.0";
+    public const string Version = "1.8.1";
 }
 
 public class FurnitureDelivery : MelonMod
 {
     private static MelonLogger.Instance MelonLogger { get; set; }
+
+    internal static Sprite StanMugshot => GetIcon(ref _stanMugshot, "FurnitureDelivery.assets.stan_mugshot.png");
+    private static Sprite _stanMugshot;
 
     public override void OnInitializeMelon()
     {
@@ -111,5 +114,36 @@ public class FurnitureDelivery : MelonMod
         MelonLogger.Debug($"Delivery manager ready");
         DeliveryManager.Instance.onDeliveryCreated += (Action<DeliveryInstance>)(di => ToileportationInterop.OnDeliveryCreated(di));
         yield break;
+    }
+    
+    private static Sprite LoadEmbeddedPNG(string resourceName)
+    {
+        var asm = Assembly.GetExecutingAssembly();
+
+        using var stream = asm.GetManifestResourceStream(resourceName);
+        if (stream == null) return null;
+
+        var data = new byte[stream.Length];
+        stream.Read(data, 0, data.Length);
+        var texture = new Texture2D(2, 2);
+        if (!texture.LoadImage(data)) return null;
+
+        var sprite = Sprite.Create(
+            texture,
+            new Rect(0, 0, texture.width, texture.height),
+            new Vector2(0.5f, 0.5f)
+        );
+        if (sprite != null) sprite.name = resourceName;
+        return sprite;
+    }
+
+    private static Sprite GetIcon(ref Sprite spriteField, string resourceName)
+    {
+        if (spriteField == null)
+        {
+            spriteField = LoadEmbeddedPNG(resourceName);
+        }
+
+        return spriteField;
     }
 }
