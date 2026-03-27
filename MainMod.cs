@@ -18,7 +18,7 @@ using Il2CppScheduleOne.Delivery;
 [assembly: MelonColor(1, 255, 215, 0)]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
-[assembly: MelonOptionalDependencies("MoreGuns", "Toileportation", "UpgradedTrashCans", "DeliveryApp++", "MetalStorage", "BigSprinklerLogic")]
+[assembly: MelonOptionalDependencies("MoreGuns", "Toileportation", "UpgradedTrashCans", "DeliveryApp++", "MetalStorage", "Absurdely Better Delivery")]
 
 #if MONO
 [assembly: MelonPlatformDomain(MelonPlatformDomainAttribute.CompatibleDomains.MONO)]
@@ -33,7 +33,7 @@ public static class BuildInfo
     public const string Name = "FurnitureDelivery";
     public const string Description = "Adds a custom delivery shops for furniture items";
     public const string Author = "k073l";
-    public const string Version = "1.8.1";
+    public const string Version = "2.0.0";
 }
 
 public class FurnitureDelivery : MelonMod
@@ -78,34 +78,41 @@ public class FurnitureDelivery : MelonMod
     {
         if (RegisteredMelons.Any(m => m.Info.Name.Contains("Toileportation")))
         {
-            if (sceneName == "Main")
+            switch (sceneName)
             {
-                MelonCoroutines.Start(Utils.WaitForNetworkSingleton<DeliveryManager>(OnDeliveryManagerReady()));
-                MelonLogger.Debug("Repatching CanOrder");
-                DeliveryShopCanOrderPatch.ApplyManualPatch();
-            }
-
-            if (sceneName == "Menu")
-            {
-                // cleanup
-                if (DeliveryManager.Instance != null)
+                case "Main":
+                    MelonCoroutines.Start(Utils.WaitForNetworkSingleton<DeliveryManager>(OnDeliveryManagerReady()));
+                    break;
+                case "Menu":
                 {
-                    DeliveryManager.Instance.onDeliveryCreated += (Action<DeliveryInstance>)(di => ToileportationInterop.OnDeliveryCreated(di));
-                }
+                    // cleanup
+                    if (DeliveryManager.Instance != null)
+                    {
+                        DeliveryManager.Instance.onDeliveryCreated += (Action<DeliveryInstance>)(di => ToileportationInterop.OnDeliveryCreated(di));
+                    }
 
-                ToileportationInterop.GoldenToiletListing = null;
+                    ToileportationInterop.GoldenToiletListing = null;
+                    break;
+                }
             }
         }
 
-        if (sceneName == "Main")
+        switch (sceneName)
         {
-            DeliveryAppAwakePatch.AddedShops = false; // reset the flag to allow adding shops again if exited to menu
-            InitializedShopsCache.shops = new();
-            if (RegisteredMelons.Any(m => m.Info.Name.Contains("DeliveryApp++")))
+            case "Main":
             {
-                MelonLogger.Msg("DeliveryAppPlusPlus detected. Applying patches");
-                DeliveryAppPlusPlusInterop.ApplyPatches();
+                if (RegisteredMelons.Any(m => m.Info.Name.Contains("DeliveryApp++")))
+                {
+                    MelonLogger.Msg("DeliveryAppPlusPlus detected. Applying patches");
+                    DeliveryAppPlusPlusInterop.ApplyPatches();
+                }
+
+                break;
             }
+            case "Menu":
+                DeliveryAppAwakePatch.AddedShops = false;
+                DeliveryAppStartPatch.Initialized = false;
+                break;
         }
     }
 

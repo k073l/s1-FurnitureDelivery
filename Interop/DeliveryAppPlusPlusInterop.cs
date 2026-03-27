@@ -116,7 +116,8 @@ public class DeliveryAppPlusPlusInterop
 
 		    var shop = PlayerSingleton<DeliveryApp>.Instance.GetShop(storeName);
 		    var unused = true;
-		    _ = DeliveryShopCanOrderPatch.HandleAddedShops(shop, out var reason, ref unused);
+		    var reason = "";
+		    _ = DeliveryShopConflictCheckPatch.PrefixCanOrder(shop, ref unused, ref reason);
 		    // check if we can order from this shop
 		    if (!string.IsNullOrEmpty(reason))
 		    {

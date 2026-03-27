@@ -5,12 +5,14 @@ using UnityEngine;
 
 #if MONO
 using FishNet;
+using ScheduleOne.ItemFramework;
 using ScheduleOne.UI.Phone.Delivery;
 using ScheduleOne.UI.Shop;
 using ScheduleOne.Vehicles.Modification;
 using ScheduleOne.Vehicles;
 #else
 using Il2CppFishNet;
+using Il2CppScheduleOne.ItemFramework;
 using Il2CppScheduleOne.UI.Phone.Delivery;
 using Il2CppScheduleOne.UI.Shop;
 using Il2CppScheduleOne.Vehicles.Modification;
@@ -19,7 +21,7 @@ using Il2CppScheduleOne.Vehicles;
 
 namespace FurnitureDelivery.Shops;
 
-public class StanShop
+public class StanShop : ICustomShop
 {
     public static readonly Dictionary<string, float> ItemPrices = new Dictionary<string, float>
     {
@@ -29,6 +31,7 @@ public class StanShop
         { "revolver", 1000f },
         { "revolvercylinder", 10f },
         { "m1911", 2500f },
+        { "goldenm1911", 25000f},
         { "m1911mag", 20f },
         { "pumpshotgun", 7500f },
         { "shotgunshell", 5f},
@@ -38,9 +41,27 @@ public class StanShop
         { "minigunmag", 10000f}, // moreguns
     };
 
+    public List<string> ItemIDs => new List<string>()
+    {
+        "baseballbat",
+        "fryingpan",
+        "machete",
+        "revolver",
+        "revolvercylinder",
+        "m1911",
+        "goldenm1911",
+        "m1911mag",
+        "pumpshotgun",
+        "shotgunshell",
+        "ak47",
+        "ak47mag",
+        "minigun",
+        "minigunmag"
+    };
+
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-StanShop");
 
-    public static void CreateStanShop(DeliveryApp app)
+    public DeliveryShop CreateShop(DeliveryApp app)
     {
         Logger.Debug("Creating Stan's shop");
 
@@ -75,22 +96,24 @@ public class StanShop
             .SetPosition(8);
 
         var itemDefinitions = Utils.GetAllStorableItemDefinitions();
+        var itemMap = itemDefinitions.ToDictionary(i => i.ID);
+
         var wantedItems = ItemPrices
-            .Select(kvp =>
+            .Where(kvp => itemMap.ContainsKey(kvp.Key))
+            .Select(kvp => new GunItem
             {
-                var item = itemDefinitions.FirstOrDefault(i => i.ID == kvp.Key);
-                return item != null ? (item, kvp.Value) : (null, 0f);
+                Item = itemMap[kvp.Key],
+                BasePrice = kvp.Value
             })
-            .Where(pair => pair.item != null)
             .ToList();
 
-        foreach (var item in wantedItems)
+        foreach (var entry in wantedItems)
         {
-            Logger.Debug($"Adding item {item.item.ID} to Stan's shop");
+            Logger.Debug($"Adding item {entry.Item.ID} to Stan's shop");
 
-            var v = item.Value;
+            var finalPrice = entry.BasePrice;
 
-            var weaponFamily = item.item.ID switch
+            var weaponFamily = entry.Item.ID switch
             {
                 "ak47" or "ak47mag" => "ak47",
                 "minigun" or "minigunmag" => "minigun",
@@ -101,16 +124,14 @@ public class StanShop
             {
                 if (MoreGunsInterop.TryGetPrices(weaponFamily, out var gunPrice, out var magPrice))
                 {
-                    if (item.item.ID == weaponFamily)
-                        v = gunPrice;
-                    else
-                        v = magPrice;
+                    finalPrice = entry.Item.ID == weaponFamily ? gunPrice : magPrice;
 
-                    Logger.Msg($"Using MoreGuns price for '{item.item.ID}': {v}");
+                    Logger.Msg($"Using MoreGuns price for '{entry.Item.ID}': {finalPrice}");
                 }
             }
-
-            shop.AddListing(item.item, overridePrice: v);
+            
+            if (Utils.Is<StorableItemDefinition>(entry.Item, out var storable))
+                shop.AddListing(storable, overridePrice: finalPrice);
         }
 
         var builtShop = shop.Build();
@@ -119,7 +140,14 @@ public class StanShop
         Logger.Msg("Stan's shop created");
 
         // same thing as with oscar's shop
+        builtShop.gameObject.SetActive(false);
 
-        builtShop.gameObject.active = false;
+        return builtShop;
     }
+}
+
+public class GunItem
+{
+    public ItemDefinition Item { get; set; }
+    public float BasePrice { get; set; }
 }

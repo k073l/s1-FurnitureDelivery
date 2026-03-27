@@ -12,9 +12,9 @@ using Il2CppScheduleOne.UI.Phone.Delivery;
 
 namespace FurnitureDelivery.Shops;
 
-public static class OscarShop
+public class OscarShop : ICustomShop
 {
-    public static readonly List<string> ItemIDs = new List<string>
+    public List<string> ItemIDs => new List<string>
     {
         "moisturepreservingpot",
         "airpot",
@@ -36,7 +36,7 @@ public static class OscarShop
 
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-OscarShop");
 
-    public static void CreateOscarShop(DeliveryApp app)
+    public DeliveryShop CreateShop(DeliveryApp app)
     {
         Logger.Debug("Creating Oscar's Equipment shop");
         var deliveryVehicle = VehicleManager.Instance.AllVehicles.AsEnumerable()
@@ -77,9 +77,6 @@ public static class OscarShop
 
         Logger.Msg("Oscar's Equipment created");
 
-        // Crucial - set oscar's shop go as disabled
-        // to prevent it from being shown in the UI
-
-        builtShop.gameObject.active = false;
+        return builtShop;
     }
 }

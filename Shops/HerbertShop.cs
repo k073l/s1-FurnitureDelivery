@@ -19,9 +19,9 @@ using Il2CppScheduleOne.Vehicles;
 
 namespace FurnitureDelivery.Shops;
 
-public class HerbertShop
+public class HerbertShop : ICustomShop
 {
-    public static readonly List<string> ItemIDs = new List<string>
+    public List<string> ItemIDs => new List<string>
     {
         "woodensign",
         "metalsign",
@@ -41,7 +41,7 @@ public class HerbertShop
 
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-HerbertShop");
 
-    public static void CreateHerbertShop(DeliveryApp app)
+    public DeliveryShop CreateShop(DeliveryApp app)
     {
         Logger.Debug("Creating Herbert's shop");
 
@@ -108,5 +108,6 @@ public class HerbertShop
 
         DeliveryShopBuilder.Apply(app, builtShop);
         Logger.Msg("Herbert's Curiosities created");
+        return builtShop;
     }
 }

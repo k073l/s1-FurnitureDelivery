@@ -13,9 +13,9 @@ using Il2CppScheduleOne.UI.Phone.Delivery;
 
 namespace FurnitureDelivery.Shops;
 
-public static class DanShop
+public class DanShop : ICustomShop
 {
-    public static readonly List<string> ItemIDs = new List<string>
+    public List<string> ItemIDs => new List<string>
     {
         "coffeetable",
         "metalsquaretable",
@@ -37,6 +37,7 @@ public static class DanShop
         "suspensionrack",
         "soilpourer",
         "potsprinkler",
+        "bigsprinkler",
         "largestoragerack",
         "mediumstoragerack",
         "smallstoragerack",
@@ -51,7 +52,7 @@ public static class DanShop
 
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-DanShop");
 
-    public static void CreateDanShop(DeliveryApp app)
+    public DeliveryShop CreateShop(DeliveryApp app)
     {
         Logger.Debug("Creating Dan's Furniture shop");
         var deliveryVehicle = VehicleManager.Instance.AllVehicles.AsEnumerable()
@@ -66,7 +67,7 @@ public static class DanShop
             .WithDeliveryFee(300f)
             .SetAvailableByDefault(true)
             .WithDeliveryVehicle(DeliveryShopBuilder.GetOrCreateDeliveryVehicle(deliveryVehicle))
-            .SetPosition(2);
+            .SetPosition(4);
 
         var itemDefinitions = Utils.GetAllStorableItemDefinitions();
 
@@ -81,25 +82,10 @@ public static class DanShop
             shop.AddListing(item);
         }
 
-        if (FurnitureDelivery.RegisteredMelons.Any(m => m.Info.Name.Contains("BigSprinklerLogic")))
-        {
-            var bigSprinkler = Utils.GetAllStorableItemDefinitions()
-                .Where(item => item.ID == "bigsprinkler")
-                .FirstOrDefault(item => item != null);
-            if (bigSprinkler != null)
-            {
-                Logger.Debug("Adding Big Sprinkler to Dan's shop");
-                shop.AddListing(bigSprinkler);
-            }
-            else
-            {
-                Logger.Warning("Big Sprinkler item definition not found");
-            }
-        }
-
         var builtShop = shop.Build();
 
         DeliveryShopBuilder.Apply(app, builtShop);
         Logger.Msg("Dan's Furniture created");
+        return builtShop;
     }
 }

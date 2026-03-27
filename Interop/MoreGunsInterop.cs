@@ -10,7 +10,7 @@ public static class MoreGunsInterop
         gunPrice = 0f;
         magPrice = 0f;
 
-        string categoryName = $"MoreGuns-{weaponID} Settings";
+        var categoryName = $"MoreGuns-{weaponID} Settings";
 
         var category = MelonPreferences.GetCategory(categoryName);
         if (category == null)
