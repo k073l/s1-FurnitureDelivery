@@ -47,7 +47,7 @@ public class DeliveryShopSetIsAvailablePatch
         var app = DeliveryApp.Instance;
         var shops = app?.deliveryShops;
 
-        var oscarShop = shops?.FirstOrDefault(item =>
+        var oscarShop = shops?.AsEnumerable().FirstOrDefault(item =>
             item != null && item.gameObject.name.StartsWith("Oscar"));
 
         if (oscarShop == null)
@@ -61,7 +61,7 @@ public class DeliveryShopSetIsAvailablePatch
 
         Logger.Msg($"First Oscar's shop: {oscarShop.gameObject.name} set to active, setting other one to active");
 
-        var oscarEquipment = shops.FirstOrDefault(item =>
+        var oscarEquipment = shops.AsEnumerable().FirstOrDefault(item =>
             item != null && item.gameObject.name.StartsWith("DeliveryShop_Oscar"));
 
         if (oscarEquipment == null)
@@ -70,11 +70,11 @@ public class DeliveryShopSetIsAvailablePatch
             return;
         }
 
-        var oscarElement = app?._shopElements?.FirstOrDefault(item => item?.Shop == oscarEquipment);
+        var oscarElement = app?._shopElements?.AsEnumerable().FirstOrDefault(item => item?.Shop == oscarEquipment);
         oscarElement?.Button?.gameObject?.SetActive(oscarAvailable);
 
         // now stan
-        var stanShop = shops.FirstOrDefault(item =>
+        var stanShop = shops.AsEnumerable().FirstOrDefault(item =>
             item != null && item.gameObject.name.StartsWith("DeliveryShop_Armory"));
         if (stanShop == null)
         {
@@ -82,7 +82,7 @@ public class DeliveryShopSetIsAvailablePatch
             return;
         }
 
-        var stanElement = app?._shopElements?.FirstOrDefault(item => item?.Shop == stanShop);
+        var stanElement = app?._shopElements?.AsEnumerable().FirstOrDefault(item => item?.Shop == stanShop);
         stanElement?.Button?.gameObject?.SetActive(oscarAvailable);
     }
 }

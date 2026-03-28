@@ -737,7 +737,11 @@ public class DeliveryShopBuilder
         if (app._shopElements == null || app._shopElements.Count == 0) return;
 
         // Sort _shopElements to match deliveryShops order
-        app._shopElements.Sort((a, b) =>
+        app._shopElements
+            #if !MONO
+            ._items.ToList()
+            #endif
+            .Sort((a, b) =>
         {
             if (a?.Shop == null || b?.Shop == null) return 0;
             var indexA = app.deliveryShops.IndexOf(a.Shop);
