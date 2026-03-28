@@ -1,7 +1,8 @@
-﻿using FurnitureDelivery.Helpers;
+using FurnitureDelivery.Helpers;
 using FurnitureDelivery.Interop;
 using MelonLoader;
 using UnityEngine;
+using DeliveryShopBuilder = FurnitureDelivery.Builders.DeliveryShopBuilder;
 
 #if MONO
 using FishNet;
@@ -21,6 +22,8 @@ namespace FurnitureDelivery.Shops;
 
 public class HerbertShop : ICustomShop
 {
+    public string ShopName => "DeliveryShop_Herbert";
+    
     public List<string> ItemIDs => new List<string>
     {
         "woodensign",
@@ -73,7 +76,7 @@ public class HerbertShop : ICustomShop
             .WithShopImage(Utils.FindSprite("Herbert_Mugshot"))
             .WithDeliveryFee(500f)
             .SetAvailableByDefault(true)
-            .WithDeliveryVehicle(DeliveryShopBuilder.GetOrCreateDeliveryVehicle(landVehicle))
+            .WithDeliveryVehicle(Registries.GetOrCreateDeliveryVehicle(landVehicle))
             .SetPosition(5);
 
         var itemDefinitions = Utils.GetAllStorableItemDefinitions();

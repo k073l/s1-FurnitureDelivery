@@ -110,9 +110,18 @@ public class FurnitureDelivery : MelonMod
                 break;
             }
             case "Menu":
-                DeliveryAppAwakePatch.AddedShops = false;
-                DeliveryAppStartPatch.Initialized = false;
                 break;
+        }
+    }
+
+    public override void OnSceneWasUnloaded(int buildIndex, string sceneName)
+    {
+        if (sceneName == "Main")
+        {
+            Patches.DeliveryAppPatches.Start.Initialized = false;
+            Patches.DeliveryAppPatches.Awake.AddedShops = false;
+            Helpers.Registries.Clear();
+            MelonLogger.Msg("Scene unloaded, reset initialization flags and registries");
         }
     }
 

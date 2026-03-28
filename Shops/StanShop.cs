@@ -1,7 +1,8 @@
-﻿using FurnitureDelivery.Helpers;
+using FurnitureDelivery.Helpers;
 using FurnitureDelivery.Interop;
 using MelonLoader;
 using UnityEngine;
+using DeliveryShopBuilder = FurnitureDelivery.Builders.DeliveryShopBuilder;
 
 #if MONO
 using FishNet;
@@ -23,6 +24,8 @@ namespace FurnitureDelivery.Shops;
 
 public class StanShop : ICustomShop
 {
+    public string ShopName => "DeliveryShop_Armory";
+    
     public static readonly Dictionary<string, float> ItemPrices = new Dictionary<string, float>
     {
         { "baseballbat", 50f },
@@ -41,23 +44,7 @@ public class StanShop : ICustomShop
         { "minigunmag", 10000f}, // moreguns
     };
 
-    public List<string> ItemIDs => new List<string>()
-    {
-        "baseballbat",
-        "fryingpan",
-        "machete",
-        "revolver",
-        "revolvercylinder",
-        "m1911",
-        "goldenm1911",
-        "m1911mag",
-        "pumpshotgun",
-        "shotgunshell",
-        "ak47",
-        "ak47mag",
-        "minigun",
-        "minigunmag"
-    };
+    public List<string> ItemIDs => ItemPrices.Keys.ToList();
 
     public static MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-StanShop");
 
@@ -92,7 +79,7 @@ public class StanShop : ICustomShop
             .WithShopImage(FurnitureDelivery.StanMugshot)
             .WithDeliveryFee(800f)
             .SetAvailableByDefault(true)
-            .WithDeliveryVehicle(DeliveryShopBuilder.GetOrCreateDeliveryVehicle(landVehicle))
+            .WithDeliveryVehicle(Registries.GetOrCreateDeliveryVehicle(landVehicle))
             .SetPosition(8);
 
         var itemDefinitions = Utils.GetAllStorableItemDefinitions();
@@ -138,9 +125,6 @@ public class StanShop : ICustomShop
 
         DeliveryShopBuilder.Apply(app, builtShop);
         Logger.Msg("Stan's shop created");
-
-        // same thing as with oscar's shop
-        builtShop.gameObject.SetActive(false);
 
         return builtShop;
     }

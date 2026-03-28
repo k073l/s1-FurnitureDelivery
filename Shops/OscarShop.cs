@@ -1,6 +1,7 @@
-﻿using FurnitureDelivery.Helpers;
+using FurnitureDelivery.Helpers;
 using MelonLoader;
 using UnityEngine;
+using DeliveryShopBuilder = FurnitureDelivery.Builders.DeliveryShopBuilder;
 
 #if MONO
 using ScheduleOne.Vehicles;
@@ -14,6 +15,8 @@ namespace FurnitureDelivery.Shops;
 
 public class OscarShop : ICustomShop
 {
+    public string ShopName => "DeliveryShop_Oscar";
+    
     public List<string> ItemIDs => new List<string>
     {
         "moisturepreservingpot",
@@ -56,7 +59,7 @@ public class OscarShop : ICustomShop
             .WithShopColor(new Color(0.87f, 0.44f, 0.05f))
             .WithShopImage(Utils.FindSprite("Oscar_Mugshot"))
             .SetAvailableByDefault(true)
-            .WithDeliveryVehicle(DeliveryShopBuilder.GetOrCreateDeliveryVehicle(deliveryVehicle))
+            .WithDeliveryVehicle(Registries.GetOrCreateDeliveryVehicle(deliveryVehicle))
             .SetPosition(7);
 
         var itemDefinitions = Utils.GetAllStorableItemDefinitions();

@@ -1,6 +1,7 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using MelonLoader;
+using FurnitureDelivery.Patches;
 #if MONO
 using ScheduleOne.DevUtilities;
 using ScheduleOne.UI.Phone.Delivery;
@@ -117,7 +118,7 @@ public class DeliveryAppPlusPlusInterop
 		    var shop = PlayerSingleton<DeliveryApp>.Instance.GetShop(storeName);
 		    var unused = true;
 		    var reason = "";
-		    _ = DeliveryShopConflictCheckPatch.PrefixCanOrder(shop, ref unused, ref reason);
+		    _ = DeliveryShopPatches.CanOrder.Prefix(shop, ref unused, ref reason);
 		    // check if we can order from this shop
 		    if (!string.IsNullOrEmpty(reason))
 		    {

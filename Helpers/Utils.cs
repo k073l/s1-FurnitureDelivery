@@ -18,44 +18,10 @@ using Il2CppScheduleOne.DevUtilities;
 using Il2CppScheduleOne.PlayerScripts;
 using Il2CppScheduleOne.UI.Phone.Delivery;
 using Object = Il2CppSystem.Object;
-using Il2CppList = Il2CppSystem.Collections.Generic;
 #endif
 
 
 namespace FurnitureDelivery.Helpers;
-
-
-
-public static class Il2CppListExtensions
-{
-    public static IEnumerable<T> AsEnumerable<T>(this List<T> list)
-    {
-        return list ?? [];
-    }
-#if !MONO
-    public static Il2CppSystem.Collections.Generic.List<T> ToIl2CppList<T>(this IEnumerable<T> source)
-    {
-        var il2CppList = new Il2CppSystem.Collections.Generic.List<T>();
-        foreach (var item in source)
-            il2CppList.Add(item);
-        return il2CppList;
-    }
-
-    public static List<T> ConvertToList<T>(this Il2CppSystem.Collections.Generic.List<T> il2CppList)
-    {
-        List<T> csharpList = new List<T>();
-        T[] array = il2CppList.ToArray();
-        csharpList.AddRange(array);
-        return csharpList;
-    }
-
-    public static IEnumerable<T> AsEnumerable<T>(this Il2CppList.List<T> list)
-    {
-        return list == null ? [] : list._items.Take(list._size);
-    }
-#endif
-}
-
 
 public static class Utils
 {
@@ -103,7 +69,6 @@ public static class Utils
         return results;
     }
 
-    // original: https://github.com/KaBooMa/S1API/blob/stable/S1API/Internal/Utils/CrossType.cs
     public static bool Is<T>(object obj, out T result)
 #if !MONO
         where T : Il2CppSystem.Object
@@ -138,7 +103,7 @@ public static class Utils
     public static List<StorableItemDefinition> GetAllStorableItemDefinitions()
     {
 #if !MONO
-        var itemRegistry = Il2CppListExtensions.ConvertToList(Registry.Instance.ItemRegistry);
+        var itemRegistry = Registry.Instance.ItemRegistry.ConvertToList();
 #else
         var itemRegistry = Registry.Instance.ItemRegistry.ToList();
 #endif
@@ -157,8 +122,7 @@ public static class Utils
             }
         }
 
-        return itemDefinitions
-            .ToList();
+        return itemDefinitions.ToList();
     }
 
     public static IEnumerator WaitForNotNull([MaybeNull] object obj, float timeout = Single.NaN, Action onTimeout = null, Action onFinish = null)
@@ -178,7 +142,6 @@ public static class Utils
         onFinish?.Invoke();
     }
 
-
     public static IEnumerator WaitForNetworkSingleton<T>(IEnumerator coroutine) where T : NetworkSingleton<T>
     {
         while (!NetworkSingleton<T>.InstanceExists)
@@ -187,17 +150,11 @@ public static class Utils
         yield return coroutine;
     }
     
-    /// <summary>
-    /// Waits for the player to be ready before starting the given coroutine.
-    /// </summary>
-    /// <param name="routine">Coroutine to start when player is ready</param>
-    /// <returns>An enumerator that waits for the player to be ready.</returns>
     public static IEnumerator WaitForPlayer(IEnumerator routine)
     {
         while (Player.Local == null || Player.Local.gameObject == null)
             yield return null;
 
-        // player is ready, start the coroutine
         MelonCoroutines.Start(routine);
     }    
     
@@ -217,5 +174,4 @@ public static class Utils
         Logger.Error($"Timed out waiting for {typeof(T).Name} to be not null");
         return null;
     }
-
 }

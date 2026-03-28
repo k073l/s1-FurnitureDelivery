@@ -1,6 +1,7 @@
-﻿using FurnitureDelivery.Helpers;
+using FurnitureDelivery.Helpers;
 using MelonLoader;
 using UnityEngine;
+using DeliveryShopBuilder = FurnitureDelivery.Builders.DeliveryShopBuilder;
 
 #if MONO
 using ScheduleOne.Vehicles;
@@ -15,6 +16,8 @@ namespace FurnitureDelivery.Shops;
 
 public class DanShop : ICustomShop
 {
+    public string ShopName => "DeliveryShop_Dan's Furniture";
+    
     public List<string> ItemIDs => new List<string>
     {
         "coffeetable",
@@ -66,7 +69,7 @@ public class DanShop : ICustomShop
             .WithShopImage(Utils.FindSprite("Dan_Mugshot"))
             .WithDeliveryFee(300f)
             .SetAvailableByDefault(true)
-            .WithDeliveryVehicle(DeliveryShopBuilder.GetOrCreateDeliveryVehicle(deliveryVehicle))
+            .WithDeliveryVehicle(Registries.GetOrCreateDeliveryVehicle(deliveryVehicle))
             .SetPosition(4);
 
         var itemDefinitions = Utils.GetAllStorableItemDefinitions();
