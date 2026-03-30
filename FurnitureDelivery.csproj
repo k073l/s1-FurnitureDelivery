@@ -2,11 +2,6 @@
 	<Import Project="build/paths.props" />
 	
 	<PropertyGroup>
-		<!-- Comment if IL2CPP -->
-		<DefineConstants>$(DefineConstants);MONO</DefineConstants>
-		<!-- Comment if testing -->
-		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-		
 		<!-- Testing props -->
 <!--		<DefineConstants>$(DefineConstants);TestMultiplayer</DefineConstants>-->
 <!--		<DefineConstants>$(DefineConstants);UnityExplorer</DefineConstants>-->
@@ -18,6 +13,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		
 		<RootNamespace>FurnitureDelivery</RootNamespace>
+		<Configurations>Mono;IL2CPP</Configurations>
 	</PropertyGroup>
 
 	<!-- Paths to other mods that script should add (no guard for mono/il2cpp incompat) -->
@@ -27,8 +23,16 @@
 <!--		<ModList Include="$(CommonDir)\Mods\MoreGunsMono.dll" />-->
 		<EmbeddedResource Include="assets\stan_mugshot.png"/>
 	</ItemGroup>
-	
-	<Import Project="build/conditions.props" />
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Mono'">
+        <DefineConstants>$(DefineConstants);MONO</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'IL2CPP'">
+        <DefineConstants>$(DefineConstants)</DefineConstants>
+    </PropertyGroup>
+
+
+    <Import Project="build/conditions.props"/>
 
 	<ItemGroup Label="Publicizer" Condition="'$(IsMono)' == 'true'">
 		<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.5.0-beta.1">
