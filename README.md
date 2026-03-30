@@ -50,6 +50,7 @@ Other tested:
 - Suspension Rack
 - Soil Pourer
 - Pot Sprinkler
+- Big Sprinkler
 - Large Storage Rack
 - Medium Storage Rack
 - Small Storage Rack

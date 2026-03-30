@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.0
+- Rewrite for compatibility with the latest game version (0.4.5f1 Anniversary Update)
+- Added Big Sprinkler to Dan's Furniture delivery service (no longer requires Big Sprinkler Logic mod)
 ## 1.8.1
 - Fix for nullrefs thrown during initialization
 - Changed the Armory icon to Stan's mugshot (thanks Wuerfelhusten!)
