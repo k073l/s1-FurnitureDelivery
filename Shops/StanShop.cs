@@ -83,7 +83,8 @@ public class StanShop : ICustomShop
             .SetPosition(8);
 
         var itemDefinitions = Utils.GetAllStorableItemDefinitions();
-        var itemMap = itemDefinitions.ToDictionary(i => i.ID);
+        var itemMap = itemDefinitions.GroupBy(x => x.ID)
+            .ToDictionary(g => g.Key, g => g.Last());
 
         var wantedItems = ItemPrices
             .Where(kvp => itemMap.ContainsKey(kvp.Key))
