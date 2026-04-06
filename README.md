@@ -1,5 +1,6 @@
 # FurnitureDelivery
-IL2CPP: [![MLVScan IL2CPP](https://api.mlvscan.com/public/attestations/att_UKDnXeAWOUdgz5aLj5FOCt81/badge.svg)](https://mlvscan.com/attestations/att_UKDnXeAWOUdgz5aLj5FOCt81) Mono: [![MLVScan Mono](https://api.mlvscan.com/public/attestations/att_rBFPo-FDGrD1ZJdn5gg8A2y8/badge.svg)](https://mlvscan.com/attestations/att_rBFPo-FDGrD1ZJdn5gg8A2y8)
+IL2CPP: [![MLVScan IL2CPP](https://mlvscan.com/attestations/att_GZPLlUU__2k6XKEqGrZABI7v/badge.svg?style=split-pill)](https://mlvscan.com/attestations/att_GZPLlUU__2k6XKEqGrZABI7v)
+Mono: [![MLVScan Mono](https://mlvscan.com/attestations/att_Dye6a0X53oedNQYn5urI0C2i/badge.svg?style=split-pill)](https://mlvscan.com/attestations/att_Dye6a0X53oedNQYn5urI0C2i)
 
 Adds ordering furniture in deliveries.
 
