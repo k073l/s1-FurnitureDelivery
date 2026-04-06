@@ -1,5 +1,7 @@
 # Changelog
 
+## 2.0.1
+- Fix for duplicate items in registry breaking the shop initialization
 ## 2.0.0
 - Rewrite for compatibility with the latest game version (0.4.5f1 Anniversary Update)
 - Added Big Sprinkler to Dan's Furniture delivery service (no longer requires Big Sprinkler Logic mod)
