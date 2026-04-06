@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FurnitureDelivery", "FurnitureDelivery.csproj", "{E25AA9AB-5CB4-4B7E-8FB6-69AB89D8FE09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		IL2CPP|Any CPU = IL2CPP|Any CPU
+		Mono|Any CPU = Mono|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E25AA9AB-5CB4-4B7E-8FB6-69AB89D8FE09}.IL2CPP|Any CPU.ActiveCfg = IL2CPP|Any CPU
+		{E25AA9AB-5CB4-4B7E-8FB6-69AB89D8FE09}.IL2CPP|Any CPU.Build.0 = IL2CPP|Any CPU
+		{E25AA9AB-5CB4-4B7E-8FB6-69AB89D8FE09}.Mono|Any CPU.ActiveCfg = Mono|Any CPU
+		{E25AA9AB-5CB4-4B7E-8FB6-69AB89D8FE09}.Mono|Any CPU.Build.0 = Mono|Any CPU
+	EndGlobalSection
+EndGlobal
