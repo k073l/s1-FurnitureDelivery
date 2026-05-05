@@ -33,7 +33,7 @@ public static class BuildInfo
     public const string Name = "FurnitureDelivery";
     public const string Description = "Adds a custom delivery shops for furniture items";
     public const string Author = "k073l";
-    public const string Version = "2.0.1";
+    public const string Version = "2.0.2";
 }
 
 public class FurnitureDelivery : MelonMod
@@ -66,11 +66,6 @@ public class FurnitureDelivery : MelonMod
         if (RegisteredMelons.Any(m => m.Info.Name.Contains("MetalStorage")))
         {
             MelonLogger.Msg("MetalStorage detected. Adding metal storage racks to Dan's shop");
-        }
-
-        if (RegisteredMelons.Any(m => m.Info.Name.Contains("BigSprinklerLogic")))
-        {
-            MelonLogger.Msg("BigSprinklerLogic detected. Adding big sprinkler to Dan's shop");
         }
     }
 

@@ -1,5 +1,7 @@
 # Changelog
 
+## 2.0.2
+- Fix for shops not showing correct UI in the delivery app, when save was reloaded
 ## 2.0.1
 - Fix for duplicate items in registry breaking the shop initialization
 ## 2.0.0

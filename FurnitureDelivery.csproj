@@ -53,11 +53,6 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include=".github\workflows\mlvscan.yml" />
-	  <Content Include=".github\workflows\release.yml" />
-	</ItemGroup>
 	
 	<!-- Events -->
 	<Import Project="build\events\preBuild.targets"/>
