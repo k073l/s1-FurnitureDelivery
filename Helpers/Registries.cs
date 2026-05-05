@@ -18,7 +18,15 @@ namespace FurnitureDelivery.Helpers;
 public static class Registries
 {
     private static GameObject _fdRoot;
-    public static GameObject FDRoot => _fdRoot ??= new GameObject("FurnitureDeliveryRoot");
+
+    public static GameObject FDRoot
+    {
+        get
+        {
+            if (_fdRoot == null) _fdRoot = new GameObject("FurnitureDeliveryRoot");
+            return _fdRoot;
+        }
+    }
 
     public static Dictionary<LandVehicle, DeliveryVehicle> DeliveryVehicleRegistry { get; } = new();
 

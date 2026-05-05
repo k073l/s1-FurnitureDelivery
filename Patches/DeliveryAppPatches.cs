@@ -31,10 +31,14 @@ public static class DeliveryAppPatches
     [HarmonyPatch(typeof(DeliveryApp), "SetIsAvailable")]
     public class SetIsAvailable
     {
-        public static bool Prefix(DeliveryApp __instance, ShopInterface matchingShop)
+        [HarmonyWrapSafe]
+        public static bool Prefix(DeliveryApp __instance, ShopInterface matchingShop, bool available)
         {
+            var deliveryShopElement = __instance._shopElements.AsEnumerable().FirstOrDefault(x => x.Shop.MatchingShop == matchingShop);
+            Debug.Log("Setting delivery shop " + matchingShop.ShopName + " availability to " + available);
+            deliveryShopElement?.Button.gameObject.SetActive(available);
             Logger.Debug($"SetIsAvailable: {matchingShop?.ShopName}");
-            return true;
+            return false;
         }
 
         public static void Postfix(DeliveryApp __instance, ShopInterface matchingShop)

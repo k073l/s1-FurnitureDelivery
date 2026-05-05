@@ -13,24 +13,6 @@ namespace FurnitureDelivery.Patches;
 [HarmonyPatch]
 public static class ShopInterfacePatches
 {
-    [HarmonyPatch(typeof(ShopInterface), "Awake")]
-    public static class ShopInterfaceAwakePatch
-    {
-        public static void Prefix(ShopInterface __instance)
-        {
-            if (__instance == null) return;
-
-            try
-            {
-                if (!ShopInterface.AllShops.Contains(__instance))
-                    ShopInterface.AllShops.Add(__instance);
-            }
-            catch
-            {
-                // ignored
-            }
-        }
-    }
 
     [HarmonyPatch(typeof(ShopInterface), nameof(ShopInterface.RefreshShownItems))]
     public static class RefreshShownItemsPatch

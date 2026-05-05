@@ -172,26 +172,6 @@ internal static class ShopInterfacePatch
 {
     public static MelonLogger.Instance Logger => new MelonLogger.Instance($"{BuildInfo.Name}-ShopInterfacePatch");
 
-    [HarmonyPatch(nameof(ShopInterface.Awake))]
-    [HarmonyPrefix]
-    private static void EnsureInAllShops(ShopInterface __instance)
-    {
-        if (__instance == null) return;
-
-        try
-        {
-            if (!ShopInterface.AllShops.Contains(__instance))
-            {
-                ShopInterface.AllShops.Add(__instance);
-                Logger.Debug($"Added ShopInterface to AllShops: {__instance.ShopName}");
-            }
-        }
-        catch (System.Exception ex)
-        {
-            Logger.Error($"Failed to add ShopInterface to AllShops: {ex.Message}");
-        }
-    }
-
     [HarmonyPatch(nameof(ShopInterface.RefreshShownItems))]
     [HarmonyPrefix]
     private static bool ExitIfUINull(ShopInterface __instance)
