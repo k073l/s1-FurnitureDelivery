@@ -1,6 +1,6 @@
 # FurnitureDelivery
-[![MLVScan IL2CPP](https://mlvscan.com/attestations/att_zzvZpn9dfcmT0YZVouphmZmO/badge.svg)](https://mlvscan.com/attestations/att_zzvZpn9dfcmT0YZVouphmZmO)
-[![MLVScan Mono](https://mlvscan.com/attestations/att_qyw4TlL2cZkmYvNGxVs5AIc0/badge.svg)](https://mlvscan.com/attestations/att_qyw4TlL2cZkmYvNGxVs5AIc0)
+[![MLVScan IL2CPP](https://mlvscan.com/attestations/att_wtV0JAoBhz-MgYgdR2KGmG3I/badge.svg)](https://mlvscan.com/attestations/att_wtV0JAoBhz-MgYgdR2KGmG3I)
+[![MLVScan Mono](https://mlvscan.com/attestations/att_RxMKHKeWdi23qonDkYf20pxQ/badge.svg)](https://mlvscan.com/attestations/att_RxMKHKeWdi23qonDkYf20pxQ)
 
 Adds ordering furniture in deliveries.
 
