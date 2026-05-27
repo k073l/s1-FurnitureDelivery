@@ -1,5 +1,7 @@
 # Changelog
 
+## 2.0.3
+- Fix for nullref on clients in multiplayer if save contains past deliveries from added shops
 ## 2.0.2
 - Fix for shops not showing correct UI in the delivery app, when save was reloaded
 ## 2.0.1

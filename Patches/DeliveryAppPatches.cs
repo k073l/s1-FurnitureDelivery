@@ -90,7 +90,8 @@ public static class DeliveryAppPatches
     {
         public static bool Initialized;
 
-        public static void Postfix(DeliveryApp __instance)
+        [HarmonyWrapSafe]
+        public static void Prefix(DeliveryApp __instance)
         {
             if (Initialized) return;
             Initialized = true;

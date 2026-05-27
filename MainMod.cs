@@ -33,7 +33,7 @@ public static class BuildInfo
     public const string Name = "FurnitureDelivery";
     public const string Description = "Adds a custom delivery shops for furniture items";
     public const string Author = "k073l";
-    public const string Version = "2.0.2";
+    public const string Version = "2.0.3";
 }
 
 public class FurnitureDelivery : MelonMod
