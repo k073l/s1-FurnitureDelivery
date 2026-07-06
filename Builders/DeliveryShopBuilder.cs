@@ -163,6 +163,7 @@ public class DeliveryShopBuilder
             Helpers.Registries.RegisterShopPosition(shopInstance.gameObject.name, _insertPosition);
             if (_shopImage != null)
                 Helpers.Registries.RegisterShopImage(shopInstance, _shopImage);
+            Helpers.Registries.DeliveryFeeRegistry.TryAdd(shopInstance, _deliveryFee);
 
             Logger.Debug($"Built delivery shop: {shopInstance.name}");
             return shopInstance;

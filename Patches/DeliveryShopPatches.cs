@@ -6,9 +6,11 @@ using HarmonyLib;
 using MelonLoader;
 
 #if MONO
+using ScheduleOne.Money;
 using ScheduleOne.Delivery;
 using ScheduleOne.UI.Phone.Delivery;
 #else
+using Il2CppScheduleOne.Money;
 using Il2CppScheduleOne.Delivery;
 using Il2CppScheduleOne.UI.Phone.Delivery;
 #endif
@@ -70,6 +72,17 @@ public static class DeliveryShopPatches
                 return false;
             }
             return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(DeliveryShop), nameof(DeliveryShop.RefreshShop))]
+    public class RefreshShop
+    {
+        public static void Postfix(DeliveryShop __instance)
+        {
+            if (__instance?.DeliveryFeeLabel == null) return;
+            __instance.DeliveryFeeLabel.text = MoneyManager.FormatAmount(__instance.GetDeliveryFee());
+            MelonDebug.Msg($"[FurnitureDelivery] RefreshShop Postfix: Updated DeliveryFeeLabel for {__instance.MatchingShopInterfaceName} to {__instance.DeliveryFeeLabel.text}");
         }
     }
 
