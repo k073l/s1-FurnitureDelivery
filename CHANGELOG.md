@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.4
+- Fix for duplicate items in the shop UI
+- Fix for delivery fees not being displayed correctly in the delivery app
 ## 2.0.3
 - Fix for nullref on clients in multiplayer if save contains past deliveries from added shops
 ## 2.0.2
