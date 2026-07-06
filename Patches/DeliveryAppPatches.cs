@@ -127,12 +127,12 @@ public static class DeliveryAppPatches
 
                 if (app._shopElements.AsEnumerable().Any(e => e?.Shop == customShop))
                 {
-                    TryInitializeShop(customShop);
+                    // TryInitializeShop(customShop);
                     continue;
                 }
 
                 CreateShopButton(app, customShop);
-                TryInitializeShop(customShop);
+                // TryInitializeShop(customShop);
             }
         }
 

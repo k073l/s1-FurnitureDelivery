@@ -21,6 +21,7 @@ public class ShopInitializer
 {
     private readonly DeliveryShop _shopInstance;
     private readonly ShopInterface _shopInterface;
+    private bool _initialized;
 
     public static MelonLogger.Instance Logger => new MelonLogger.Instance($"{BuildInfo.Name}-ShopInitializer");
 
@@ -32,11 +33,13 @@ public class ShopInitializer
 
     public void Initialize()
     {
+        if (_initialized) return;
+        _initialized = true;
         _shopInstance.gameObject.SetActive(true);
 
         try
         {
-            CreateListingEntries();
+            // CreateListingEntries();
             SetupButtonListeners();
             Logger.Debug("Initialize complete");
         }
@@ -55,6 +58,7 @@ public class ShopInitializer
             if (!listing.CanBeDelivered) continue;
             try
             {
+                Logger.Debug($"Creating listing entry for {listing.name}");
                 var entry = Object.Instantiate(_shopInstance.ListingEntryPrefab, _shopInstance.ListingContainer);
                 entry.Initialize(listing);
                 entry.onQuantityChanged.AddListener((UnityAction)(_shopInstance.RefreshCart));
