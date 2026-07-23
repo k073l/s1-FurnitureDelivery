@@ -1,9 +1,11 @@
+using System.Collections;
 using System.Linq;
 using FurnitureDelivery.Builders;
 using FurnitureDelivery.Helpers;
 using FurnitureDelivery.Interop;
 using HarmonyLib;
 using MelonLoader;
+using UnityEngine;
 
 #if MONO
 using ScheduleOne.Money;
@@ -75,12 +77,20 @@ public static class DeliveryShopPatches
         }
     }
 
-    [HarmonyPatch(typeof(DeliveryShop), nameof(DeliveryShop.RefreshShop))]
-    public class RefreshShop
+    [HarmonyPatch(typeof(DeliveryShop), nameof(DeliveryShop.RefreshCart))]
+    public class RefreshDeliveryFee
     {
+        // Patching RefreshCart since RefreshShop is inlined on IL2CPP
         public static void Postfix(DeliveryShop __instance)
         {
             if (__instance?.DeliveryFeeLabel == null) return;
+            MelonCoroutines.Start(RefreshAfterDelay(__instance));
+        }
+
+        private static IEnumerator RefreshAfterDelay(DeliveryShop __instance)
+        {
+            yield return new WaitForSeconds(0.5f);
+            if (__instance?.DeliveryFeeLabel == null) yield break;
             __instance.DeliveryFeeLabel.text = MoneyManager.FormatAmount(__instance.GetDeliveryFee());
             MelonDebug.Msg($"[FurnitureDelivery] RefreshShop Postfix: Updated DeliveryFeeLabel for {__instance.MatchingShopInterfaceName} to {__instance.DeliveryFeeLabel.text}");
         }
