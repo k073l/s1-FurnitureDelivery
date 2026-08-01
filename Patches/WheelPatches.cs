@@ -2,10 +2,10 @@ using HarmonyLib;
 
 #if MONO
 using ScheduleOne.Vehicles;
-using ScheduleOne.Weather;
+using ScheduleOne.Core.Weather;
 #else
 using Il2CppScheduleOne.Vehicles;
-using Il2CppScheduleOne.Weather;
+using Il2CppScheduleOne.Core.Weather;
 #endif
 
 namespace FurnitureDelivery.Patches;

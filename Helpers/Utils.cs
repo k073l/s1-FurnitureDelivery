@@ -16,6 +16,7 @@ using Il2CppScheduleOne;
 using Il2CppScheduleOne.ItemFramework;
 using Il2CppScheduleOne.DevUtilities;
 using Il2CppScheduleOne.PlayerScripts;
+using Il2CppInterop.Runtime.InteropTypes;
 using Il2CppScheduleOne.UI.Phone.Delivery;
 using Object = Il2CppSystem.Object;
 #endif
@@ -98,6 +99,21 @@ public static class Utils
 
         result = null!;
         return false;
+    }
+
+    public static bool Is2<T>(object obj, out T? result)
+#if !MONO
+        where T : Il2CppObjectBase
+#else
+        where T : class
+#endif
+    {
+#if !MONO
+        result = (obj as Il2CppObjectBase)?.TryCast<T>();
+#else
+        result = obj as T;
+#endif
+        return result != null;
     }
 
     public static List<StorableItemDefinition> GetAllStorableItemDefinitions()

@@ -29,6 +29,8 @@ public class VehicleSync
     public static bool isClient = !Lobby.Instance.IsHost && Lobby.Instance.IsInLobby;
     public static bool isSingleplayer = !Lobby.Instance.IsInLobby;
 
+    private static SteamLobbyService _steamLobbyService;
+
     public static void SyncVehicles()
     {
         if (isSingleplayer)
@@ -45,7 +47,8 @@ public class VehicleSync
             var payload = SerializeVehicles(AddedVehicles);
             Logger.Debug($"Syncing vehicles to clients: {payload}");
             // Lobby.Instance.SetLobbyData(LobbyKey, payload);
-            if (!SteamMatchmaking.SetLobbyData(Lobby.Instance.LobbySteamID, VehiclesKey, payload))
+            InitSteamLobbyService();
+            if (!SteamMatchmaking.SetLobbyData(_steamLobbyService._lobbySteamID, VehiclesKey, payload))
             {
                 Logger.Error("Failed to set lobby data for vehicle sync");
             }
@@ -83,7 +86,8 @@ public class VehicleSync
 
     private static bool GetPayload()
     {
-        var payload = SteamMatchmaking.GetLobbyData(Lobby.Instance.LobbySteamID, VehiclesKey);
+        InitSteamLobbyService();
+        var payload = SteamMatchmaking.GetLobbyData(_steamLobbyService._lobbySteamID, VehiclesKey);
         if (!string.IsNullOrEmpty(payload))
         {
             Logger.Debug($"Received vehicle sync payload: {payload}");
@@ -189,5 +193,16 @@ public class VehicleSync
         Logger.Debug($"Searching for vehicle by name: {name}");
         var id = AddedVehicles.FirstOrDefault(kvp => kvp.Value.Item1.Contains(name)).Key;
         return id != 0 ? GetVehicleById(id) : null;
+    }
+
+    private static void InitSteamLobbyService()
+    {
+        if (_steamLobbyService != null) return;
+        if (!Utils.Is2<SteamLobbyService>(Lobby.Instance._lobbyService, out var sls) || sls == null)
+        {
+            Logger.Error("Failed to cast Lobby.Instance._lobbyService to SteamLobbyService. Steam lobby may not be available");
+            return;
+        }
+        _steamLobbyService = sls;
     }
 }

@@ -1,5 +1,7 @@
 # Changelog
 
+## 2.0.5
+- Updated for compatibility with the latest game version (0.4.6-f11)
 ## 2.0.4
 - Fix for duplicate items in the shop UI
 - Fix for delivery fees not being displayed correctly in the delivery app

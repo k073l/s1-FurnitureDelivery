@@ -18,7 +18,7 @@ using ScheduleOne.PlayerScripts;
 using ScheduleOne.UI.Phone.Delivery;
 using ScheduleOne.UI.Shop;
 using ScheduleOne.Vehicles;
-using ScheduleOne.Weather;
+using ScheduleOne.Core.Weather;
 using ScheduleOne.ItemFramework;
 
 #else
@@ -30,7 +30,7 @@ using Il2CppScheduleOne.PlayerScripts;
 using Il2CppScheduleOne.UI.Phone.Delivery;
 using Il2CppScheduleOne.UI.Shop;
 using Il2CppScheduleOne.Vehicles;
-using Il2CppScheduleOne.Weather;
+using Il2CppScheduleOne.Core.Weather;
 using Il2CppScheduleOne.ItemFramework;
 #endif
 
